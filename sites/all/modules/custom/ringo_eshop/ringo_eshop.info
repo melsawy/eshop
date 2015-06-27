@@ -1,0 +1,4 @@
+name = Ringo eshop
+description = A base module for ringo eshop core features
+core = 7.x
+

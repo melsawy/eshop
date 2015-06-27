@@ -1,0 +1,15 @@
+ul#secondary-menu-links,
+#main-wrapper .container-inner > .grid:first-child {
+  float: left;
+
+}
+
+.grid,
+#logo {
+  float: right;
+}
+
+.region-header {
+  float: left;
+  clear: left;
+}
