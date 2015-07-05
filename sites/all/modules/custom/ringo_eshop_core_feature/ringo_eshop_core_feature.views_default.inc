@@ -120,6 +120,16 @@ function ringo_eshop_core_feature_views_default_views() {
     '***CURRENT_LANGUAGE***' => '***CURRENT_LANGUAGE***',
     'und' => 'und',
   );
+  /* Filter criterion: Field: Categories (field_categories) */
+  $handler->display->display_options['filters']['field_categories_tid']['id'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['table'] = 'field_data_field_categories';
+  $handler->display->display_options['filters']['field_categories_tid']['field'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_categories_tid']['value'] = array(
+    44 => '44',
+  );
+  $handler->display->display_options['filters']['field_categories_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_categories_tid']['vocabulary'] = 'categories';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
@@ -237,6 +247,16 @@ function ringo_eshop_core_feature_views_default_views() {
     '***CURRENT_LANGUAGE***' => '***CURRENT_LANGUAGE***',
     'und' => 'und',
   );
+  /* Filter criterion: Field: Categories (field_categories) */
+  $handler->display->display_options['filters']['field_categories_tid']['id'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['table'] = 'field_data_field_categories';
+  $handler->display->display_options['filters']['field_categories_tid']['field'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_categories_tid']['value'] = array(
+    44 => '44',
+  );
+  $handler->display->display_options['filters']['field_categories_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_categories_tid']['vocabulary'] = 'categories';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
@@ -360,6 +380,16 @@ function ringo_eshop_core_feature_views_default_views() {
   $handler->display->display_options['filters']['totalcount']['field'] = 'totalcount';
   $handler->display->display_options['filters']['totalcount']['operator'] = '>';
   $handler->display->display_options['filters']['totalcount']['value']['value'] = '0';
+  /* Filter criterion: Field: Categories (field_categories) */
+  $handler->display->display_options['filters']['field_categories_tid']['id'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['table'] = 'field_data_field_categories';
+  $handler->display->display_options['filters']['field_categories_tid']['field'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_categories_tid']['value'] = array(
+    44 => '44',
+  );
+  $handler->display->display_options['filters']['field_categories_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_categories_tid']['vocabulary'] = 'categories';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
@@ -488,6 +518,16 @@ function ringo_eshop_core_feature_views_default_views() {
     '***CURRENT_LANGUAGE***' => '***CURRENT_LANGUAGE***',
     'und' => 'und',
   );
+  /* Filter criterion: Field: Categories (field_categories) */
+  $handler->display->display_options['filters']['field_categories_tid']['id'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['table'] = 'field_data_field_categories';
+  $handler->display->display_options['filters']['field_categories_tid']['field'] = 'field_categories_tid';
+  $handler->display->display_options['filters']['field_categories_tid']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_categories_tid']['value'] = array(
+    44 => '44',
+  );
+  $handler->display->display_options['filters']['field_categories_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_categories_tid']['vocabulary'] = 'categories';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
