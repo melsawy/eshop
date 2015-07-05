@@ -5,15 +5,15 @@ jQuery(document).ready(function() {
     jQuery('#national-bundle-details').prepend(nat_options);
     jQuery('#edit-attributes-4').hide();
 
-    jQuery( "select#edit-attributes-3" ).change(function() {
-        if (jQuery(this).val() == 15) {
+    jQuery( "select#edit-attributes-2" ).change(function() {
+        if (jQuery(this).val()) {
             jQuery('#national-bundle-details').show();
         }
         else {
             jQuery('#national-bundle-details').hide();
         }
     });
-    jQuery( "select#edit-attributes-3").trigger('change');
+    jQuery( "select#edit-attributes-2").trigger('change');
     jQuery('table.nat-bundle td:not(.package, .disabled)').on('click', function () {
         jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
 
