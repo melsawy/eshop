@@ -13,6 +13,14 @@ function ringo_eshop_uc_checkout_pane() {
      'process' => TRUE,
      'weight' => 3,
    );
+  $panes[] = array(
+    'id' => 'ringo_contact_info',
+    'title' => t('Contact info'),
+     'desc' => t('Provide customers to add contact information'),
+     'callback' => 'ringo_eshop_contact_info_pane_checkout',
+     'process' => TRUE,
+     'weight' => 2,
+   );
 
    return $panes;
 }
@@ -57,8 +65,6 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
 
     //CHECKOUT PROCESSING - load values into order object.
     case 'process':
-      watchdog('id-preprocess', '<pre>'. print_r($form_state['values']['panes']['id_document'], true).'</pre>');
-      watchdog('id-preprocess-form', '<pre>'. print_r($form, true).'</pre>');
       if (empty($form_state['values']['panes']['id_document']['id_type'])) {
         form_set_error('panes][id_document][id_type', t('You cannot check out without selecting an ID type.'));
         return FALSE;
@@ -86,6 +92,68 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
       $message[] = array(
         'title' => t('Expiry date'),
         'data' => $order->data['id_expiry_date'],
+      );
+      return $message;
+  }
+}
+
+/**
+ * ID Document checkout pane function
+ */
+function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$form_state = NULL) {
+
+  switch($op) {
+    //CHECKOUT FORM
+    case 'view':
+      $contents['contact_title'] = array(
+        '#title' => t('Title'),
+        '#type' => 'select',
+        '#options' => array(
+          '1' => t('Mr'),
+          '2' => t('Ms'),
+        ),
+        '#required' =>  TRUE,
+      );
+      $contents['contact_gender'] = array(
+        '#title' => t('Gender'),
+        '#type' => 'select',
+        '#options' => array(
+          '1' => t('Male'),
+          '2' => t('Female'),
+        ),
+        '#required' =>  TRUE,
+      );
+      $contents['contact_birth_date'] = array(
+        '#title' => t('Date of birth'),
+        '#type' => 'date_popup',
+        '#date_format' => 'm/d/Y',
+        '#date_label_position' => 'within',
+        '#date_increment' => 15,
+        '#date_year_range' => '0:+8',
+      );
+      return array('description' => '', 'contents' => $contents);
+
+    //CHECKOUT PROCESSING - load values into order object.
+    case 'process':
+      $order->data['contact_title'] = $form_state['values']['panes']['ringo_contact_info']['contact_title'];
+      $order->data['contact_gender'] = $form_state['values']['panes']['ringo_contact_info']['contact_gender'];
+      $order->data['contact_birth_date'] = $form_state['values']['panes']['ringo_contact_info']['contact_birth_date'];
+
+      return TRUE;
+
+    //CHECKOUT REVIEW
+    case 'review':
+      $message[] = array(
+        'title' => t('Title'),
+        'data' => $order->data['contact_title'],
+      );
+      $message[] = array(
+        'title' => t('Gender'),
+        'data' => $order->data['contact_gender'],
+      );
+      $message[] = array(
+        'title' => t('Date of birth'),
+        'data' => $order->data['contact_birth_date'],
       );
       return $message;
   }
