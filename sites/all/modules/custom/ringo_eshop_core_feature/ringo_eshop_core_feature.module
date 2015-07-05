@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the ringo_eshop_core_feature feature.
+ */
+
+include_once 'ringo_eshop_core_feature.features.inc';
