@@ -1,5 +1,96 @@
 <?php
 
+/**
+ * Implementation of hook_uc_checkout_pane()
+ */
+
+function ringo_eshop_uc_checkout_pane() {
+  $panes[] = array(
+    'id' => 'id_document',
+    'title' => t('ID Document'),
+     'desc' => t('Provide customers to add ID document information'),
+     'callback' => 'ringo_eshop_id_document_pane_checkout',
+     'process' => TRUE,
+     'weight' => 3,
+   );
+
+   return $panes;
+}
+
+/**
+ * ID Document checkout pane function
+ */
+function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$form_state = NULL) {
+
+  switch($op) {
+    //CHECKOUT FORM
+    case 'view':
+      $contents['id_type'] = array(
+        '#title' => 'Type',
+        '#type' => 'select',
+        '#options' => array(
+          '1' => t('ID'),
+          '2' => t('Passport'),
+        ),
+        '#required' =>  TRUE,
+        //'#default_value' => $arg1->shipping_insurance['accept'] ? $arg1->shipping_insurance['accept'] : NULL,
+      );
+      $contents['id_number'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Number'),
+        '#required' => TRUE,
+      );
+      $contents['id_expiry_date'] = array(
+        '#title' => t('Expiry date'),
+        '#type' => 'date_popup',
+        '#date_format' => 'm/d/Y',
+        '#date_label_position' => 'within',
+        '#date_increment' => 15,
+        '#date_year_range' => '0:+8',
+      );
+      $contents['id_card'] = array(
+        '#type' => 'file',
+        '#title' => t('Image'),
+        '#description' => t('Upload ID card & Tax code'),
+      );
+      return array('description' => '', 'contents' => $contents);
+
+    //CHECKOUT PROCESSING - load values into order object.
+    case 'process':
+      watchdog('id-preprocess', '<pre>'. print_r($form_state['values']['panes']['id_document'], true).'</pre>');
+      watchdog('id-preprocess-form', '<pre>'. print_r($form, true).'</pre>');
+      if (empty($form_state['values']['panes']['id_document']['id_type'])) {
+        form_set_error('panes][id_document][id_type', t('You cannot check out without selecting an ID type.'));
+        return FALSE;
+      }
+      if (empty($form_state['values']['panes']['id_document']['id_number'])) {
+        form_set_error('panes][id_document][id_number', t('You cannot check out without adding ID number.'));
+        return FALSE;
+      }
+      $order->data['id_type'] = $form_state['values']['panes']['id_document']['id_type'];
+      $order->data['id_number'] = $form_state['values']['panes']['id_document']['id_number'];
+      $order->data['id_expiry_date'] = $form_state['values']['panes']['id_document']['id_expiry_date'];
+
+      return TRUE;
+
+    //CHECKOUT REVIEW
+    case 'review':
+      $message[] = array(
+        'title' => t('ID Type'),
+        'data' => $order->data['id_type'],
+      );
+      $message[] = array(
+        'title' => t('ID Number'),
+        'data' => $order->data['id_number'],
+      );
+      $message[] = array(
+        'title' => t('Expiry date'),
+        'data' => $order->data['id_expiry_date'],
+      );
+      return $message;
+  }
+}
+
 function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($nid == $sim_id) {
