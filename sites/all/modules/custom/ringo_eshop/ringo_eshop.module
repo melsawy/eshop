@@ -272,3 +272,14 @@ function assign_national_bundle_form($national_bundles) {
   return $form;
 }
 
+/**
+ * Implements of hook_init().
+ */
+function ringo_eshop_init() {
+  // Redirect to SIM cart product page
+  if ($_GET['q'] == 'taxonomy/term/44') {
+    $sim_id = variable_get('ringo_eshop_sim_id', 30);
+    drupal_goto('node/'. $sim_id);
+  }
+}
+
