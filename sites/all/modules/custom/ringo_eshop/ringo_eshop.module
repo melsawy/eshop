@@ -1,4 +1,115 @@
 <?php
 
+function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
+  $sim_id = variable_get('ringo_eshop_sim_id', 30);
+  if ($nid == $sim_id) {
+    global $user;
+    $oid = $data['attributes'][2];
+    db_insert('ringo_eshop_numbers')
+      ->fields(array(
+        'oid' => $oid,
+        'uid' => $user->uid,
+        'status' => 1,
+      ))
+      ->execute();
+  }
+}
 
+function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
+  $sim_id = variable_get('ringo_eshop_sim_id', 30);
+  if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
+    $query = db_select('ringo_eshop_numbers', 'rn');
+    $query->addField('rn', 'oid');
+    $locked_options = $query->execute()->fetchAllKeyed(0, 0);
+    $form['attributes'][2]['#options'] = array_diff_key($form['attributes'][2]['#options'], $locked_options);
+    // add national offers
+    $summary_text = t('You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
+  an estimated monthly bill of !price € / month',
+      array(
+        '!blue_start' => '<span class="blue-color">',
+        '!voice' => '<span class="voice">0</span>',
+        '!sms' => '<span class="sms">0</span>',
+        '!data' => '<span class="data">0</span>',
+        '!price' => '<span class="purple-color"> <span class="total">0</span>',
+        '!blue_end' => '</span>',
+      ));
+    //$form['attributes'][4]['#description'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text));
+    $form['attributes'][4]['#prefix'] = '<div id="national-bundle-details">';
+    $form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
+    $form += _ringo_eshop_build_national_offers();
+  }
+}
+
+function ringo_eshop_uc_cart_item_delete($entity) {
+  $sim_id = variable_get('ringo_eshop_sim_id', 30);
+  if ($entity->nid == $sim_id) {
+    $oid =  $entity->data['attributes'][2];
+    db_delete('ringo_eshop_numbers')
+      ->condition('oid', $oid)
+      ->execute();
+  }
+}
+
+function _ringo_eshop_build_national_offers() {
+  $national_offers = array();
+  $cid = 'national_offers';
+  if ($cache = cache_get($cid)) {
+    $national_offers = $cache->data;
+  }
+  return assign_national_bundle_form($national_offers);
+}
+
+function assign_national_bundle_form($national_bundles) {
+  $headers = array('');
+  $rows = array();
+  foreach ($national_bundles as $type => $packages) {
+    $row = array(
+      'data' => array(),
+      'class' => array(strtolower($type)),
+      'group' => array(strtolower($type)),
+    );
+
+    $options = array();
+    $row['data'][] = array('data' => t($type), 'class' => array('package'));
+
+    foreach ($packages as $size => $package) {
+      $cell = array(
+        'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => $package['quantity'])) . '<br />'
+          . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => $package['price'])),
+        'package-id' => $package['id'],
+      );
+
+      $options[$package['id']] = $package['service_name'];
+
+      $row['data'][] = $cell;
+
+      if (!in_array($size, $headers)) {
+        $headers[] = $size;
+      }
+    }
+
+    $rows[] = $row;
+    $form[strtolower($type)] = array(
+      '#type' => 'radios',
+      '#title' => $type,
+      '#options' => $options,
+    );
+  }
+
+  $form['nat-table'] = array(
+    '#prefix' => '<div id ="nat-bundle-options">',
+    '#markup' => theme(
+        'table', array(
+          'header' => $headers,
+          'rows' => $rows,
+          'attributes' => array('class' => array('nat-bundle')),
+        )
+      ),
+    '#suffix' => '</div>',
+  );
+
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
+
+  return $form;
+}
 
