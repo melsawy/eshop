@@ -143,3 +143,11 @@ table.nat-bundle tr th {
     background: none repeat scroll 0 0 #b7b7b7;
     color: #5c2a74;
 }
+
+
+.skip-bundle {
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+    padding-bottom: 10px;
+}

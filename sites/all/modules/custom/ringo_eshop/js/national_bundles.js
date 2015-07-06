@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {
     //adjust elements for natinal bundles
     jQuery('.form-item-voice, .form-item-sms, .form-item-data').hide();
-    var nat_options = jQuery('#nat-bundle-options');
+    var nat_options = jQuery('#edit-select-nat-bundle');
     jQuery('#national-bundle-details').prepend(nat_options);
     jQuery('#edit-attributes-4').hide();
 
@@ -29,7 +29,24 @@ jQuery(document).ready(function() {
         updateSummary();
     });
     updateSummary();
+
+    // adjust element for international bundles
+    var internat_options = jQuery('#edit-select-int-bundle');
+    jQuery('#international-bundle-details').prepend(internat_options);
+    jQuery('#edit-attributes-5').hide();
+    jQuery('#international-bundle-details').hide();
 });
+
+function toggle_bundle(bundle) {
+    if (bundle == 'international') {
+        jQuery('#international-bundle-details').show();
+        jQuery('#national-bundle-details').hide();
+    }
+    else {
+        jQuery('#international-bundle-details').hide();
+        jQuery('#national-bundle-details').show();
+    }
+}
 
 function updateSummary() {
   if (jQuery('table.nat-bundle').length == 0) {

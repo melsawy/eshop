@@ -1,5 +1,12 @@
 <?php
 
+define('RINGO_BASE_CACHE_RINGO_ENDPOINTS', REQUEST_TIME + 3600);
+
+require_once DRUPAL_ROOT . '/sites/all/modules/custom/ringo_eshop/includes/assign_bundle.inc';
+require_once DRUPAL_ROOT . '/sites/all/modules/custom/ringo_eshop/includes/ringo_api_calls.inc';
+require_once DRUPAL_ROOT . '/sites/all/modules/custom/ringo_eshop/soap/DealerWs/DealerWs.php';
+require_once DRUPAL_ROOT . '/sites/all/modules/custom/ringo_eshop/soap/ManagementWs/ManagementWs.php';
+
 /**
  * Implementation of hook_uc_checkout_pane()
  */
@@ -217,6 +224,7 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
+    drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
@@ -236,6 +244,9 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $form['attributes'][4]['#prefix'] = '<div id="national-bundle-details">';
     $form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
     $form += _ringo_eshop_build_national_offers();
+    $form['attributes'][5]['#prefix'] = '<div id="international-bundle-details">';
+    $form['attributes'][5]['#suffix'] = '</div>';
+    $form += _ringo_eshop_build_international_offers();
   }
 }
 
@@ -255,62 +266,92 @@ function _ringo_eshop_build_national_offers() {
   if ($cache = cache_get($cid)) {
     $national_offers = $cache->data;
   }
+  //$national_offers = get_national_offers();
   return assign_national_bundle_form($national_offers);
 }
 
-function assign_national_bundle_form($national_bundles) {
-  $headers = array('');
-  $rows = array();
-  foreach ($national_bundles as $type => $packages) {
-    $row = array(
-      'data' => array(),
-      'class' => array(strtolower($type)),
-      'group' => array(strtolower($type)),
-    );
+function _ringo_eshop_build_international_offers() {
+  $international_offers = array();
+  $cid = 'international_offers';
+  if ($cache = cache_get($cid)) {
+    $international_offers = $cache->data;
+  }
+  //$international_offers = get_international_offers();
+  return _ringo_eshop_assign_international_bundle_form($international_offers);
+}
 
-    $options = array();
-    $row['data'][] = array('data' => t($type), 'class' => array('package'));
 
-    foreach ($packages as $size => $package) {
-      $cell = array(
-        'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => $package['quantity'])) . '<br />'
-          . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => $package['price'])),
-        'package-id' => $package['id'],
-      );
+function _ringo_eshop_assign_international_bundle_form($international_promotions) {
+  $form = array();
+  $user_regions = array();
 
-      $options[$package['id']] = $package['service_name'];
+  // Add bundle field set.
+  $form['select-int-bundle'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('International bundles'),
+  );
+  $form['select-int-bundle']['skip'] = array(
+    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'national\');">'. t('Go to national bundle') .'</div>',
+  );
 
-      $row['data'][] = $cell;
+  $regions = array();
+  $table_region = NULL;
+  $taken_bundles = array();
+  foreach ($international_promotions as $region_promotions) {
+    $region_id = $region_promotions['regionId'];
 
-      if (!in_array($size, $headers)) {
-        $headers[] = $size;
+    // If all bundles are taken, skip this region.
+    if (isset($user_regions[$region_id])) {
+      if (count($user_regions[$region_id]) == count($region_promotions['bundles'])) {
+        continue;
       }
     }
 
-    $rows[] = $row;
-    $form[strtolower($type)] = array(
-      '#type' => 'radios',
-      '#title' => $type,
-      '#options' => $options,
+    $regions[$region_promotions['regionId']] = t($region_promotions['regionName']);
+
+    // Show selected country if any.
+    if (isset($form_state['values']['int-region']) && $form_state['values']['int-region'] == $region_promotions['regionId']) {
+      $table_region = $region_promotions;
+      $taken_bundles = isset($user_regions[$region_id]) ? $user_regions[$region_id] : array();
+    }
+
+    // Show first country by default.
+    if (is_null($table_region)) {
+      $table_region = $region_promotions;
+      $taken_bundles = isset($user_regions[$region_id]) ? $user_regions[$region_id] : array();
+    }
+  }
+
+  $form['select-int-bundle']['int-region'] = array(
+    '#type' => 'select',
+    '#options' => $regions,
+    '#ajax' => array(
+      'event' => 'change',
+      'wrapper' => 'select-int-wrapper',
+      'callback' => 'int_bundle_selection_change_callback',
+      'method' => 'replace',
+    ),
+  );
+
+  if (!is_null($table_region)) {
+    $form['select-int-bundle']['int-bundle'] = get_international_table(
+      $table_region,
+      TRUE,
+      $taken_bundles
+    );
+
+    $form['select-int-bundle']['int-bundle']['#prefix'] = '<div id="select-int-wrapper" >';
+    $form['select-int-bundle']['int-bundle']['#suffix'] = '</div>';
+  }
+  else {
+    $form['select-int-bundle']['int-bundle'] = array(
+      '#markup' => '<div id="select-int-wrapper" ></div>',
     );
   }
 
-  $form['nat-table'] = array(
-    '#prefix' => '<div id ="nat-bundle-options">',
-    '#markup' => theme(
-        'table', array(
-          'header' => $headers,
-          'rows' => $rows,
-          'attributes' => array('class' => array('nat-bundle')),
-        )
-      ),
-    '#suffix' => '</div>',
-  );
-
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
-
   return $form;
 }
+
 
 /**
  * Implements of hook_init().
