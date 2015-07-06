@@ -506,7 +506,7 @@ function assign_national_bundle_form($national_bundles) {
     '#title' => t('National bundles'),
   );
   $form['select-nat-bundle']['skip'] = array(
-    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('GO to international bundle') .'</div>',
+    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
   );
   $form['select-nat-bundle']['nat-table'] = array(
     '#prefix' => '<div id ="nat-bundle-options">',
