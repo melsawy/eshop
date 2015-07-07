@@ -38,7 +38,7 @@ function get_request_parameter() {
  * Get dealer service object.
  */
 function get_dealer_service() {
-  include_once drupal_get_path('module', 'ringo_base') . '/soap/DealerWs/DealerWs.php';
+  include_once drupal_get_path('module', 'ringo_eshop') . '/soap/DealerWs/DealerWs.php';
 
   return new \DealerWs(array('trace' => RINGO_BASE_API_DEBUG_ENABLED));
 }
@@ -47,7 +47,7 @@ function get_dealer_service() {
  * Get management service object.
  */
 function get_management_service() {
-  include_once drupal_get_path('module', 'ringo_base') . '/soap/ManagementWs/ManagementWs.php';
+  include_once drupal_get_path('module', 'ringo_eshop') . '/soap/ManagementWs/ManagementWs.php';
 
   return new \ManagementWs(array('trace' => RINGO_BASE_API_DEBUG_ENABLED));
 }
