@@ -505,9 +505,7 @@ function assign_national_bundle_form($national_bundles) {
     '#type' => 'fieldset',
     '#title' => t('National bundles'),
   );
-  $form['select-nat-bundle']['skip'] = array(
-    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
-  );
+
   $form['select-nat-bundle']['nat-table'] = array(
     '#prefix' => '<div id ="nat-bundle-options">',
     '#markup' => theme(
@@ -519,7 +517,9 @@ function assign_national_bundle_form($national_bundles) {
     ),
     '#suffix' => '</div>',
   );
-
+  $form['select-nat-bundle']['skip'] = array(
+    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
+  );
   //drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
 
   return $form;
