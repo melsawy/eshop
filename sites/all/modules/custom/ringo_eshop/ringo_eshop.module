@@ -94,7 +94,7 @@ function _ringo_eshop_build_national_offers() {
   if ($cache = cache_get($cid)) {
     $national_offers = $cache->data;
   }
-  //$national_offers = get_national_offers();
+  $national_offers = get_national_offers();
   return assign_national_bundle_form($national_offers);
 }
 
