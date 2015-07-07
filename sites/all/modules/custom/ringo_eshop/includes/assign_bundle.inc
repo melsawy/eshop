@@ -150,8 +150,9 @@ function get_national_offers($reset = FALSE) {
         'price' => $bundle->price,
         'obj' => $bundle,
       );
-
     }
+
+    cache_set($cid, $national_offers, 'cache', RINGO_BASE_CACHE_RINGO_ENDPOINTS);
   }
 
   return $national_offers;
@@ -309,31 +310,37 @@ function assign_international_bundle_form($form_state, $international_promotions
     // Is this region one of the user regions ?
     foreach ($user_promotions->simPromotions as $user_promotion) {
       // Because we have no IDs we have to do stupid name comparison.
-      if (strpos(
-          $user_promotion->name,
-          'ICS'
-        ) === FALSE && $user_promotion->subscriptionStatus == 1
-      ) {
-        $country = substr($user_promotion->name, 0, strrpos($user_promotion->name, '_'));
-        $country = str_replace('_', ' ', $country);
+      if (is_object($user_promotion)) {
+        if (strpos(
+            $user_promotion->name,
+            'ICS'
+          ) === FALSE && $user_promotion->subscriptionStatus == 1
+        ) {
+          $country = substr(
+            $user_promotion->name,
+            0,
+            strrpos($user_promotion->name, '_')
+          );
+          $country = str_replace('_', ' ', $country);
 
-        if (isset($international_promotions[$country])) {
-          // Region data (all bundles).
-          $region_promotions = $international_promotions[$country];
+          if (isset($international_promotions[$country])) {
+            // Region data (all bundles).
+            $region_promotions = $international_promotions[$country];
 
-          // Add this country to the users regions, to avoid allowing users
-          // to add more bundles to the same region.
-          if (!isset($user_regions[$region_promotions['regionId']])) {
-            $user_regions[$region_promotions['regionId']] = array();
-          }
+            // Add this country to the users regions, to avoid allowing users
+            // to add more bundles to the same region.
+            if (!isset($user_regions[$region_promotions['regionId']])) {
+              $user_regions[$region_promotions['regionId']] = array();
+            }
 
-          // Find out which bundle is chosen.
-          $chosen_bundle = NULL;
-          foreach ($region_promotions['bundles'] as $bundle) {
-            if ($bundle['service_name'] == $user_promotion->name) {
-              $chosen_bundle = $bundle['id'];
+            // Find out which bundle is chosen.
+            $chosen_bundle = NULL;
+            foreach ($region_promotions['bundles'] as $bundle) {
+              if ($bundle['service_name'] == $user_promotion->name) {
+                $chosen_bundle = $bundle['id'];
 
-              $user_regions[$region_promotions['regionId']][] = $bundle['id'];
+                $user_regions[$region_promotions['regionId']][] = $bundle['id'];
+              }
             }
           }
         }
@@ -446,15 +453,15 @@ function add_national_bundle_submit($form, &$form_state) {
   }
 
   $voice = $sms = $data = '?';
-  if (!is_null($values['voice'])) {
+  if (!is_null($values['voice']) && $values['voice'] != -1) {
     $voice = find_national_offer_by_id($values['voice'], 'VOICE');
   }
 
-  if (!is_null($values['sms'])) {
+  if (!is_null($values['sms']) && $values['sms'] != -1) {
     $sms = find_national_offer_by_id($values['sms'], 'SMS');
   }
 
-  if (!is_null($values['data'])) {
+  if (!is_null($values['data']) && $values['data'] != -1) {
     $data = find_national_offer_by_id($values['data'], 'DATA');
   }
 
@@ -465,8 +472,8 @@ function add_national_bundle_submit($form, &$form_state) {
   $form_state['redirect'] = 'my-ringo/manage-bundles';
 }
 
-function assign_national_bundle_form($national_bundles) {
-  $headers = array('');
+function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
+  $headers = array('', t('XS'));
   $rows = array();
   foreach ($national_bundles as $type => $packages) {
     $row = array(
@@ -478,14 +485,39 @@ function assign_national_bundle_form($national_bundles) {
     $options = array();
     $row['data'][] = array('data' => t($type), 'class' => array('package'));
 
+
+    $row['data'][] = array(
+      'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => 0)) . '<br />'
+        . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => 0)),
+      'package-id' => -1,
+    );
+
+    $options[-1] = "Nothing";
+
     foreach ($packages as $size => $package) {
       $cell = array(
         'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => $package['quantity'])) . '<br />'
-          . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => $package['price'])),
+        . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => $package['price'])),
         'package-id' => $package['id'],
       );
 
       $options[$package['id']] = $package['service_name'];
+
+      if (!is_null($user_bundles)) {
+        // Find out if this cell is already taken.
+        if (is_array($user_bundles->simPromotions)) {
+          foreach ($user_bundles->simPromotions as $user_bundle) {
+            if ($user_bundle->name == $package['service_name']) {
+              $cell['class'] = array('disabled');
+              $cell['title'] = t('Package already active.');
+
+              // Remove this promotion from selectable packages.
+              unset($options[$package['id']]);
+              break;
+            }
+          }
+        }
+      }
 
       $row['data'][] = $cell;
 
@@ -495,6 +527,7 @@ function assign_national_bundle_form($national_bundles) {
     }
 
     $rows[] = $row;
+
     $form[strtolower($type)] = array(
       '#type' => 'radios',
       '#title' => $type,
@@ -520,8 +553,7 @@ function assign_national_bundle_form($national_bundles) {
   $form['select-nat-bundle']['skip'] = array(
     '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
   );
-  //drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
-
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   return $form;
 }
 
@@ -559,29 +591,38 @@ function user_bundles_form($user_offerings, $national_bundles, $international_bu
   );
   foreach ($types as $type) {
     $found = FALSE;
-    foreach ($user_offerings->simPromotions as $promotion) {
-      if (strpos($promotion->name, $type) !== FALSE) {
-        $found = TRUE;
 
-        $nat_offer = find_national_offer_by_service_name($promotion->name);
+    if (is_array($user_offerings->simPromotions)) {
+      foreach ($user_offerings->simPromotions as $promotion) {
+        if (strpos($promotion->name, $type) !== FALSE) {
+          $found = TRUE;
 
-        $parts = explode('_', $promotion->name);
-        $size = array_pop($parts);
-        $size_text = isset($size_map[$size]) ? $size_map[$size]['abbr'] : $size;
-        $weight = isset($size_map[$size]) ? $size_map[$size]['weight'] : $size;
+          $nat_offer = find_national_offer_by_service_name($promotion->name);
 
-        $national_rows[] = array(
-          'data' => array(
-            t($type) . ' <span class="size">(' . $size_text . ')</span>',
-            ringo_format_date($promotion->endDate),
-            is_object($nat_offer) ? t('- / !count !unit', array('!count' => $nat_offer->quantity, '!unit' => $units[$type])) : '-',
-            $promotion->subscriptionStatus == 1 ? t('Active') : '-',
-          ),
-          'class' => array('data'),
-          'type' => $type,
-          'size' => $size_text,
-          'weight' => $weight,
-        );
+          $parts = explode('_', $promotion->name);
+          $size = array_pop($parts);
+          $size_text = isset($size_map[$size]) ? $size_map[$size]['abbr'] : $size;
+          $weight = isset($size_map[$size]) ? $size_map[$size]['weight'] : $size;
+
+          $national_rows[] = array(
+            'data' => array(
+              t($type) . ' <span class="size">(' . $size_text . ')</span>',
+              ringo_format_date($promotion->endDate),
+              is_object($nat_offer) ? t(
+                '- / !count !unit',
+                array(
+                  '!count' => $nat_offer->quantity,
+                  '!unit' => $units[$type]
+                )
+              ) : '-',
+              $promotion->subscriptionStatus == 1 ? t('Active') : '-',
+            ),
+            'class' => array('data'),
+            'type' => $type,
+            'size' => $size_text,
+            'weight' => $weight,
+          );
+        }
       }
     }
 
@@ -631,21 +672,28 @@ function user_bundles_form($user_offerings, $national_bundles, $international_bu
 
   // Keep international rows in a separate array to sort them.
   $international_rows = array();
-  foreach ($user_offerings->simPromotions as $promotion) {
-    if (is_object($promotion) && strpos($promotion->name, 'ICS') === FALSE) {
-      $bundle = find_international_offer_by_service_name($promotion->name, $international_bundles);
+  if (is_array($user_offerings->simPromotions)) {
+    foreach ($user_offerings->simPromotions as $promotion) {
+      if (is_object($promotion) && strpos($promotion->name, 'ICS') === FALSE) {
+        $bundle = find_international_offer_by_service_name(
+          $promotion->name,
+          $international_bundles
+        );
 
-      $international_rows[] = array(
-        'data' => array(
-          t($bundle['obj']->region->regionDescription) . ' <span class="size">(' . t($bundle['size']) . ')</span>',
-          ringo_format_date($promotion->endDate),
-           t('- / !count min', array('!count' => $bundle['quantity'])),
-          $promotion->subscriptionStatus == 1 ? t('Active') : '-',
-        ),
-        'class' => array('data', $promotion->name),
-        'country' => t($bundle['obj']->region->regionDescription),
-        'size' => $bundle['size'],
-      );
+        $international_rows[] = array(
+          'data' => array(
+            t(
+              $bundle['obj']->region->regionDescription
+            ) . ' <span class="size">(' . t($bundle['size']) . ')</span>',
+            ringo_format_date($promotion->endDate),
+            t('- / !count min', array('!count' => $bundle['quantity'])),
+            $promotion->subscriptionStatus == 1 ? t('Active') : '-',
+          ),
+          'class' => array('data', $promotion->name),
+          'country' => t($bundle['obj']->region->regionDescription),
+          'size' => $bundle['size'],
+        );
+      }
     }
   }
 
