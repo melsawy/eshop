@@ -118,3 +118,17 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 	border-color: #5D2A75;
 	color: #5D2A75;
 }
+
+/*
+* Views Exposed Form : Theming
+*/
+.view-filters .views-exposed-form .views-exposed-widget .form-type-select{
+    float: left;
+    margin-right: .5em;
+    margin-left: 0;
+}
+
+.view-filters .views-exposed-form .views-exposed-widget .form-type-select label {
+  float: right;
+  padding: 0px 0px 5px 10px;
+}

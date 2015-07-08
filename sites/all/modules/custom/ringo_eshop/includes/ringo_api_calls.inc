@@ -7,7 +7,7 @@
 
 define('RINGO_BASE_API_USERNAME', 'webApiAgent');
 define('RINGO_BASE_API_PASSWORD', '-7fs.81QA');
-define('RINGO_BASE_API_DEBUG_ENABLED', 1);
+define('RINGO_BASE_API_DEBUG_ENABLED', 0);
 
 // AM: this is unsafe, replace this with the proper code to generate the crypted
 // password.
@@ -24,11 +24,13 @@ function get_request_parameter() {
   // $encoded_password = create_hash(RINGO_BASE_API_PASSWORD);
   $encoded_password = RINGO_BASE_API_ENCODED_PASSWORD;
 
+  $bundle_list = NULL;
   $client_id = '13';
   $client_ip = ip_address();
   $token = '?';
+  $localeId = '?';
 
-  return new requestParameter($encoded_password, RINGO_BASE_API_USERNAME, $client_id, $client_ip, $token);
+  return new requestParameter($encoded_password, RINGO_BASE_API_USERNAME, $bundle_list, $client_id, $client_ip, $localeId, $token);
 }
 
 
@@ -121,10 +123,14 @@ function ringo_api_get_customer($customer_id) {
  *   the customer mobile number
  */
 function ringo_api_get_customer_id($mobile_number) {
+
   $service = get_management_service();
 
   $auth_params = get_request_parameter();
-  $msisdn_status_params = new getMsisdnDetailRequest($auth_params, $mobile_number);
+  $msisdn_status_params = new getMsisdnDetailRequest(
+    $auth_params,
+    $mobile_number
+  );
   $request = new \getMsisdnStatus($msisdn_status_params);
 
   $response = $service->getMsisdnStatus($request);
@@ -148,20 +154,42 @@ function ringo_api_get_customer_id($mobile_number) {
  * return array
  *   all customer mobile numbers.
  */
-function ringo_api_get_all_mobile_numbers($tax_code) {
+function ringo_api_get_all_mobile_numbers($tax_code, $reset = FALSE) {
   $service = get_management_service();
+  $numbers = array();
+  $cid = 'all_mobile_numbers:' . $tax_code;
 
-  $auth_params = get_request_parameter();
-  $get_sim_params = new getAllSimByTaxCodeRequest($auth_params, 1, $tax_code);
-  $request = new \getSimByTaxCode($get_sim_params);
+  if (!$reset && $cache = cache_get($cid)) {
+    $numbers = $cache->data;
+  }
+  else {
+    $auth_params = get_request_parameter();
+    $get_sim_params = new getAllSimByTaxCodeRequest($auth_params, 1, $tax_code);
+    $request = new \getSimByTaxCode($get_sim_params);
 
-  $response = $service->getSimByTaxCode($request);
+    $response = $service->getSimByTaxCode($request);
 
-//  var_dump($service->__getLastRequest());
-//  var_dump($service->__getLastResponse());
-//  dpm($response->return);
+    if (is_array($response->return->rContainerArray)) {
+      $sims = $response->return->rContainerArray;
+    }
+    else {
+      $sims = array($response->return->rContainerArray);
+    }
 
-  return $response;
+    if (isset($response->return->rContainerArray)) {
+      foreach ($sims as $sim) {
+        foreach ($sim->fields as $field) {
+          if ($field->name == 'MSISDN') {
+            $numbers[] = $field->value;
+          }
+        }
+      }
+    }
+
+    cache_set($cid, $numbers, 'cache', RINGO_BASE_CACHE_RINGO_ENDPOINTS);
+  }
+
+  return $numbers;
 }
 
 
@@ -242,7 +270,7 @@ function ringo_api_topup_history($mobile) {
   $service = get_management_service();
 
   $auth_params = get_request_parameter();
-  $recharge_list_params = new getTopupListRequest($auth_params, strtotime("first day of previous month"), strtotime('now'), 20, $mobile, '?');
+  $recharge_list_params = new getTopupListRequest($auth_params, '?', '?', 20, $mobile, '?');
   $recharge_list_request = new \getRechargesList($recharge_list_params);
 
   $response = $service->getRechargesList($recharge_list_request);
