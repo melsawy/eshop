@@ -8,6 +8,19 @@ require_once dirname(__FILE__) . '/soap/DealerWs/DealerWs.php';
 require_once dirname(__FILE__) . '/soap/ManagementWs/ManagementWs.php';
 require_once dirname(__FILE__) . '/uc_eshop_checkout_pane.inc';
 
+function ringo_eshop_menu() {
+  $items = array();
+  $items['my-ringo/manage-bundles'] = array(
+    'title' => 'My Offers',
+    'page callback' => '_ringo_eshop_build_international_offers',
+    //'page callback' => 'drupal_get_form',
+    //'page arguments' => array('assign_eshop_international_bundle_form'),
+    'access callback' => 'user_is_logged_in',
+    'file' => 'assign_bundle.inc',
+    'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
+  );
+  return $items;
+}
 /**
  * Implementation of hook_uc_checkout_pane()
  */
@@ -73,7 +86,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
     $form += _ringo_eshop_build_national_offers();
     $form['attributes'][5]['#prefix'] = '<div id="international-bundle-details">';
-    $form['attributes'][5]['#suffix'] = '</div>';
+    $form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
     $form += _ringo_eshop_build_international_offers();
   }
 }
@@ -85,11 +98,17 @@ function ringo_eshop_uc_cart_alter(&$items) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   foreach ($items as $id => $item) {
     if ($item->nid == $sim_id) {
+      $pattern = '/"([0-9].*?)€/';
       if (!empty($item->data['attributes'][4])) {
-        $pattern = '/"([0-9].*?)€/';
         preg_match($pattern, $item->data['attributes'][4], $matches);
         if (isset($matches[1])) {
           $items[$id]->price += intval($matches[1]);
+        }
+      }
+      if (!empty($item->data['attributes'][5])) {
+        preg_match_all($pattern, $item->data['attributes'][5], $matches);
+        foreach ($matches[1] as $price) {
+          $items[$id]->price += intval($price);
         }
       }
     }
@@ -123,7 +142,8 @@ function _ringo_eshop_build_international_offers() {
     $international_offers = $cache->data;
   }
   //$international_offers = get_international_offers();
-  return _ringo_eshop_assign_international_bundle_form($international_offers);
+  //return _ringo_eshop_assign_international_bundle_form($international_offers);
+  return drupal_get_form('assign_eshop_international_bundle_form');
 }
 
 

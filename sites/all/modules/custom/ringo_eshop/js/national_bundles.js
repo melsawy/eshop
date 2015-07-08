@@ -83,3 +83,25 @@ function updateSummary() {
     jQuery('#edit-attributes-4').val('');
   }
 }
+
+function _assign_international_bundle() {
+    if (jQuery(".form-item-int-bundle input[name=int-bundle]:checked").val()) {
+        var price =  jQuery(".form-item-int-bundle input[name=int-bundle]:checked").parents('tr').find('td.price').html();
+        var size =  jQuery(".form-item-int-bundle input[name=int-bundle]:checked").parents('tr').find('td.size').html();
+        var country_id = jQuery('#edit-int-region :selected').val();
+        var country_name = jQuery('#edit-int-region :selected').text();
+        jQuery('.internat-bundle-desc span[data-id='+ country_id +']').remove();
+        var html = '<span data-id="'+ country_id +'">'+ country_name +'('+ size +') - "'+ price +'"</span>';
+        if (jQuery('.internat-bundle-desc').html()) {
+            jQuery('.internat-bundle-desc').append(', ' + html);
+        }
+        else {
+            jQuery('.internat-bundle-desc').html(html);
+        }
+        jQuery('#edit-attributes-5').val(jQuery('.internat-bundle-desc').text());
+        //alert(Drupal.t('Your package was added successfully'));
+    }
+    else {
+        alert(Drupal.t('You should select one package'));
+    }
+}

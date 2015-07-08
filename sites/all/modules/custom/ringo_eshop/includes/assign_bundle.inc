@@ -16,67 +16,24 @@ define('ASSIGN_BUNDLE_EDIT_MODE_INT', 'INT');
 /**
  * Assign bundle form.
  */
-function assign_bundle_form($form, $form_state) {
+function assign_eshop_international_bundle_form($form, $form_state) {
   global $user;
   $form = array();
-
-  $mobile = current_mobile_number();
-
   $international_offers = get_international_offers();
-  $national_offers = get_national_offers();
 
-  $user_promotions = ringo_api_get_mobile_number_current_promotions($mobile);
-
-  if ($user->uid == 1) {
-    $form['credit'] = array(
-      '#type' => 'item',
-      '#title' => t('Credit'),
-      '#markup' => $user_promotions->promoBags->credit,
-    );
-  }
-
-  $form['user-bundles'] = user_bundles_form($user_promotions, $national_offers, $international_offers);
-
-  $form['manage-bundles'] = array(
-    '#type' => 'fieldset',
-  );
-
-  $form['manage-bundles']['manage-nat'] = array(
-    '#type' => 'submit',
-    '#value' => t('Manage national offers'),
-    '#submit' => array('manage_national_bundles_submit'),
-    '#attributes' => array(
-      'class' => array('manage-nat'),
-    ),
-  );
-
-  $form['manage-bundles']['manage-int'] = array(
-    '#type' => 'submit',
-    '#value' => t('Manage international offers'),
-    '#submit' => array('manage_international_bundles_submit'),
-    '#attributes' => array(
-      'class' => array('manage-int'),
-    ),
-  );
-
-  if (isset($form_state['storage']['state'])) {
+  if (TRUE || isset($form_state['storage']['state'])) {
     $order_button_handler = '';
 
-    if ($form_state['storage']['state'] == ASSIGN_BUNDLE_EDIT_MODE_NAT) {
-      $form += assign_national_bundle_form($national_offers, $user_promotions);
-      $order_button_handler = 'add_national_bundle_submit';
-    }
-
-    if ($form_state['storage']['state'] == ASSIGN_BUNDLE_EDIT_MODE_INT) {
+    if (TRUE || $form_state['storage']['state'] == ASSIGN_BUNDLE_EDIT_MODE_INT) {
       $form += assign_international_bundle_form(
         $form_state,
         $international_offers,
-        $user_promotions
+        array()
       );
       $order_button_handler = 'add_international_bundle_submit';
     }
 
-    if ($form_state['storage']['state'] != ASSIGN_BUNDLE_EDIT_MODE_NONE) {
+    if (FALSE) {
       $form['confirm-bundles'] = array(
         '#type' => 'submit',
         '#value' => t('order now'),
@@ -259,9 +216,9 @@ function get_international_table($region_data, $show_radios = TRUE, $taken_bundl
     }
 
     $rows[$offer['id']] = array(
-      t($offer['size']),
+      array('data' => t($offer['size']), 'class' => array('size')),
       t('!count Min', array('!count' => $offer['quantity'])),
-      t('!count €', array('!count' => $offer['price'])),
+      array('data' => t('!count €', array('!count' => $offer['price'])), 'class' => array('price')),
       t('!count €', array('!count' => $offer['ratePerMin'])),
       t('!count €', array('!count' => $offer['activationFee'])),
     );
@@ -304,70 +261,17 @@ function get_international_table($region_data, $show_radios = TRUE, $taken_bundl
 function assign_international_bundle_form($form_state, $international_promotions, $user_promotions = NULL) {
   $form = array();
   $user_regions = array();
-
-
-  if (!is_null($user_promotions)) {
-    // Is this region one of the user regions ?
-    foreach ($user_promotions->simPromotions as $user_promotion) {
-      // Because we have no IDs we have to do stupid name comparison.
-      if (is_object($user_promotion)) {
-        if (strpos(
-            $user_promotion->name,
-            'ICS'
-          ) === FALSE && $user_promotion->subscriptionStatus == 1
-        ) {
-          $country = substr(
-            $user_promotion->name,
-            0,
-            strrpos($user_promotion->name, '_')
-          );
-          $country = str_replace('_', ' ', $country);
-
-          if (isset($international_promotions[$country])) {
-            // Region data (all bundles).
-            $region_promotions = $international_promotions[$country];
-
-            // Add this country to the users regions, to avoid allowing users
-            // to add more bundles to the same region.
-            if (!isset($user_regions[$region_promotions['regionId']])) {
-              $user_regions[$region_promotions['regionId']] = array();
-            }
-
-            // Find out which bundle is chosen.
-            $chosen_bundle = NULL;
-            foreach ($region_promotions['bundles'] as $bundle) {
-              if ($bundle['service_name'] == $user_promotion->name) {
-                $chosen_bundle = $bundle['id'];
-
-                $user_regions[$region_promotions['regionId']][] = $bundle['id'];
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   // Add bundle field set.
   $form['select-int-bundle'] = array(
     '#type' => 'fieldset',
+    '#title' => t('International bundle'),
   );
-
   $regions = array();
   $table_region = NULL;
   $taken_bundles = array();
   foreach ($international_promotions as $region_promotions) {
     $region_id = $region_promotions['regionId'];
-
-    // If all bundles are taken, skip this region.
-    if (isset($user_regions[$region_id])) {
-      if (count($user_regions[$region_id]) == count($region_promotions['bundles'])) {
-        continue;
-      }
-    }
-
     $regions[$region_promotions['regionId']] = t($region_promotions['regionName']);
-
     // Show selected country if any.
     if (isset($form_state['values']['int-region']) && $form_state['values']['int-region'] == $region_promotions['regionId']) {
       $table_region = $region_promotions;
@@ -380,7 +284,6 @@ function assign_international_bundle_form($form_state, $international_promotions
       $taken_bundles = isset($user_regions[$region_id]) ? $user_regions[$region_id] : array();
     }
   }
-
   $form['select-int-bundle']['int-region'] = array(
     '#type' => 'select',
     '#options' => $regions,
@@ -391,7 +294,6 @@ function assign_international_bundle_form($form_state, $international_promotions
       'method' => 'replace',
     ),
   );
-
   if (!is_null($table_region)) {
     $form['select-int-bundle']['int-bundle'] = get_international_table(
       $table_region,
@@ -407,7 +309,16 @@ function assign_international_bundle_form($form_state, $international_promotions
       '#markup' => '<div id="select-int-wrapper" ></div>',
     );
   }
+  $form['select-int-bundle']['add_package'] = array(
+    '#type' => 'button',
+    '#value' => t('Add package'),
+    '#attributes' => array('onclick' => '_assign_international_bundle();return false;'),
+    //'#markup' => '<div class="add_package" onclick="_assign_international_bundle();">'. t('Add package') .'</div>',
+  );
 
+  $form['select-int-bundle']['skip'] = array(
+    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'national\');">'. t('Go to national bundle') .'</div>',
+  );
   return $form;
 }
 
@@ -425,7 +336,7 @@ function int_bundle_selection_change_callback($form, &$form_state) {
 
 
 function add_international_bundle_submit($form, &$form_state) {
-  $mobile = current_mobile_number();
+  $mobile = '122222';//current_mobile_number();
 
   $promotion_id = $form_state['values']['int-bundle'];
 

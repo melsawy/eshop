@@ -139,6 +139,7 @@ table.nat-bundle tr td.selected-cell {
     color: #fff;
 }
 
+table.int-bundle tr th,
 table.nat-bundle tr th {
     background: none repeat scroll 0 0 #b7b7b7;
     color: #5c2a74;
@@ -150,4 +151,20 @@ table.nat-bundle tr th {
     cursor: pointer;
     font-weight: bold;
     padding-bottom: 10px;
+}
+.attribute.attribute-4.odd {
+    clear: both;
+}
+.button.edit-add-package {
+    float: right;
+}
+.internat-bundle-desc,
+.nat-bundle-desc {
+    background-color: #5c2a74;
+    color: white;
+    padding: 15px 5px;
+}
+.form-item-attributes-4 > label,
+.form-item-attributes-5 > label {
+    font-weight: bold;
 }
