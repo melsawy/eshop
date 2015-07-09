@@ -30,9 +30,12 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#date_increment' => 15,
         '#date_year_range' => '0:+8',
       );
-      $contents['id_card'] = array(
+      $contents['id_card_image'] = array(
         '#type' => 'file',
         '#title' => t('Image'),
+        '#name' => 'id_card_image',
+        '#required' => TRUE,
+        '#false' => TRUE,
         '#description' => t('Upload ID card & Tax code'),
       );
       return array('description' => '', 'contents' => $contents);
@@ -47,6 +50,37 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         form_set_error('panes][id_document][id_number', t('You cannot check out without adding ID number.'));
         return FALSE;
       }
+      
+    // id_card File Upload Validation 
+        $id_card_image = 'id_card_image';
+        //  make sure we upload an image
+        $validators = array(
+           'file_validate_is_image' => array(),
+        );      
+        foreach ($_FILES as $key => $value) {
+            if ($key == $id_card_image) {
+                foreach ($value as $fkey => $fvalue) {
+                    $_FILES['files'][$fkey][$id_card_image] = $fvalue;
+                }
+            }
+        }
+        // if file exist then save it
+        if(!empty($_FILES[$id_card_image])) {
+            // temprorarly save the file
+            $id_card_saved_file = file_save_upload($id_card_image, $validators, 'public://');
+            if($id_card_saved_file) {
+                // permenantly save the file
+                $id_card_saved_file->status = FILE_STATUS_PERMANENT;
+                // Save file status.
+                file_save($id_card_saved_file); 
+                // Add FID to Object
+                $order->data['id_expiry_date_fid'] = $id_card_saved_file->fid ; 
+            }
+        }
+           
+      
+      // End of :  id_card File Upload Validation 
+      
       $order->data['id_type'] = $form_state['values']['panes']['id_document']['id_type'];
       $order->data['id_number'] = $form_state['values']['panes']['id_document']['id_number'];
       $order->data['id_expiry_date'] = $form_state['values']['panes']['id_document']['id_expiry_date'];
@@ -55,6 +89,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
 
     //CHECKOUT REVIEW
     case 'review':
+      
       $message[] = array(
         'title' => t('ID Type'),
         'data' => $order->data['id_type'],
@@ -67,6 +102,14 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         'title' => t('Expiry date'),
         'data' => $order->data['id_expiry_date'],
       );
+      if(!empty($order->data['id_expiry_date_fid'])) {
+          $id_card_saved_file  = file_load($order->data['id_expiry_date_fid']) ; 
+    
+      $message[] = array(
+         'title' => t('ID Card') ,
+          'data' =>  l(t('View Document Id'),file_create_url($id_card_saved_file->uri), array('attributes' => array('target'=>'_blank'))) 
+      );
+      }
       return $message;
   }
 }
