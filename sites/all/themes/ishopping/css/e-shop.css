@@ -167,4 +167,37 @@ table.nat-bundle tr th {
 .form-item-attributes-4 > label,
 .form-item-attributes-5 > label {
     font-weight: bold;
+  }
+
+
+/*
+* Views Exposed Form : Theming
+*/
+.view-filters .views-exposed-form .views-exposed-widget .form-type-select {
+    float: right;
+    margin-left: .5em;
+    margin-right: 0;
+}
+
+.view-filters .views-exposed-form .views-exposed-widget .form-type-select label{
+    float: left;
+}
+
+.view-filters .views-exposed-form .views-widget-sort-order {
+    display: none;
+}
+
+.view-filters .views-exposed-form div.filter-sortby-arrow-wrapper {
+      float: right;
+      width: 30px;
+      height: 20px;   
+      cursor: pointer;
+}
+
+.view-filters .views-exposed-form div.filter-sortby-arrow-wrapper.order-asc {
+      background: url(../images/arrow-down.gif) no-repeat 50% 50% ;
+}
+
+.view-filters .views-exposed-form div.filter-sortby-arrow-wrapper.order-desc {
+    background: url(../images/arrow-up.gif) no-repeat 50% 50% ;
 }
