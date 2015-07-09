@@ -36,7 +36,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#title' => t('Image'),
         '#name' => 'id_card_image',
         '#required' => TRUE,
-        '#false' => TRUE,
+        '#value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : "" , 
         '#description' => t('Upload ID card & Tax code'),
       );
       return array('description' => '', 'contents' => $contents);
@@ -63,6 +63,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         $validators = array(
            'file_validate_is_image' => array(),
         );      
+ 
         foreach ($_FILES as $key => $value) {
             if ($key == $id_card_image) {
                 foreach ($value as $fkey => $fvalue) {
@@ -70,6 +71,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
                 }
             }
         }
+
         // if file exist then save it
         if(!empty($_FILES[$id_card_image])) {
             // temprorarly save the file
@@ -84,7 +86,6 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
             }
         }
            
-      
       // End of :  id_card File Upload Validation 
       
       $order->data['id_type'] = $form_state['values']['panes']['id_document']['id_type'];
@@ -185,10 +186,12 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#title' => t('Province of birth'),
         '#type' => 'textfield',
       );
-      $contents['contract'] = array(
+      $contents['contract_file'] = array(
         '#type' => 'file',
         '#title' => t('Upload signed contract'),
-        //'#description' => t('Upload signed contract'),
+        '#name' => 'contract_file',
+        '#default_value' => !empty($order->data['contract_date_fid']) ? $order->data['contract_date_fid'] : "" ,  
+        '#required' => TRUE,
       );
       return array('description' => '', 'contents' => $contents);
 
@@ -204,6 +207,38 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       $order->data['city_birth'] = $form_state['values']['panes']['ringo_contact_info']['city_birth'];
       $order->data['province_birth'] = $form_state['values']['panes']['ringo_contact_info']['province_birth'];
       //$order->data['country_birth'] = $form_state['values']['panes']['ringo_contact_info']['country_birth'];
+
+      // Contract File Upload Validation 
+        $contract_file = 'contract_file';
+        //  make sure we upload an image
+        $validators = array(
+           'file_validate_extensions' => array('pdf doc docx png jpg jpeg'),
+        ); 
+
+        foreach ($_FILES as $key => $value) {
+            if ($key == $contract_file) {
+                foreach ($value as $fkey => $fvalue) {
+                    $_FILES['files'][$fkey][$contract_file] = $fvalue;
+                }
+            }
+        }
+
+        // if file exist then save it
+        if(!empty($_FILES[$contract_file])) {
+            // temprorarly save the file
+            $contract_saved_file = file_save_upload($contract_file, $validators, 'public://');
+            if($contract_saved_file) {
+                // permenantly save the file
+                $contract_saved_file->status = FILE_STATUS_PERMANENT;
+                // Save file status.
+                file_save($contract_saved_file); 
+                // Add FID to Object
+                $order->data['contract_date_fid'] = $contract_saved_file->fid ; 
+            }
+        }
+           
+      // End of :  Contract File Upload Validation      
+      
       return TRUE;
 
     //CHECKOUT REVIEW
@@ -218,6 +253,14 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       //$message[] = array('title' => t('Country of birth'), 'data' => $order->data['country_birth']);
       $message[] = array('title' => t('City of birth'), 'data' => $order->data['city_birth']);
       $message[] = array('title' => t('Province of birth'), 'data' => $order->data['province_birth']);
+      if(!empty($order->data['contract_date_fid'])) {
+          $contract_saved_file  = file_load($order->data['contract_date_fid']) ; 
+    
+      $message[] = array(
+         'title' => t('Contract File') ,
+          'data' =>  l(t('View the Contract'),file_create_url($contract_saved_file->uri), array('attributes' => array('target'=>'_blank'))) 
+      );
+      }      
       return $message;
   }
 }
