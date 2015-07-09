@@ -262,6 +262,12 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       $order->data['province_birth'] = $form_state['values']['panes']['ringo_contact_info']['province_birth'];
       //$order->data['country_birth'] = $form_state['values']['panes']['ringo_contact_info']['country_birth'];
 
+      // Validate that tax code field is a number
+      if(!ctype_digit($form_state['values']['panes']['ringo_contact_info']['tax_code'])) {
+        form_set_error('panes][ringo_contact_info][tax_code', t('You must enter a valid Tax code number.'));
+        return FALSE;          
+      }      
+      
       // Contract File Upload Validation 
         $contract_file = 'contract_file';
         //  make sure we upload an image
