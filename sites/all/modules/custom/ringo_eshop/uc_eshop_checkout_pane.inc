@@ -50,8 +50,13 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         form_set_error('panes][id_document][id_number', t('You cannot check out without adding ID number.'));
         return FALSE;
       }
+      // Validate that id_number field is a number
+      if(!ctype_digit($form_state['values']['panes']['id_document']['id_number'])) {
+        form_set_error('panes][id_document][id_number', t('You must enter a valid ID number.'));
+        return FALSE;          
+      }
       
-    // id_card File Upload Validation 
+      // id_card File Upload Validation 
         $id_card_image = 'id_card_image';
         //  make sure we upload an image
         $validators = array(
