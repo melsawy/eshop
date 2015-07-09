@@ -132,3 +132,12 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
   float: right;
   padding: 0px 0px 5px 10px;
 }
+
+
+/*
+* Checkout Page : Forms
+*/
+/*
+#uc-cart-checkout-form .address-pane-table tr td {
+    text-align: right;
+}*/

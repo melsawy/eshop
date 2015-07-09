@@ -201,3 +201,82 @@ table.nat-bundle tr th {
 .view-filters .views-exposed-form div.filter-sortby-arrow-wrapper.order-desc {
     background: url(../images/arrow-up.gif) no-repeat 50% 50% ;
 }
+
+/*
+* Checkout Page : Form
+*/
+#uc-cart-checkout-form  .form-item input.form-text {
+    height: 25px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    width: 80%;    
+}
+
+#uc-cart-checkout-form  text-area {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+#uc-cart-checkout-form  .form-item select.form-select {
+    width: 86%;
+    height: 37px;  
+}
+
+#uc-cart-checkout-form  .form-item input.form-file{
+    padding: 8px;
+    width: 80%;    
+}
+#uc-cart-checkout-form  .form-item .description {
+    display: none; 
+}
+
+#uc-cart-checkout-form .container-inline-date .date-padding {
+    padding:0px;   
+    width: 100%;
+}
+
+#uc-cart-checkout-form .chosen-container-single .chosen-single {
+    padding: 5px 5px 5px 8px;
+    height: 25px;    
+}
+
+.uc-cart-checkout-form .fieldset#ringo_contact_info-pane .form-item,
+.uc-cart-checkout-form .fieldset#id_document-pane .form-item{
+    margin: 2px 0;
+    width: 49%;
+    float: left;
+    height: 70px;
+}
+
+#uc-cart-checkout-form .container-inline-date .form-item .form-item {
+    width: 100%;   
+}
+
+#uc-cart-checkout-form .address-pane-table tr {
+    margin: 2px 0;
+    display: block;
+    float: left;
+    width: 100%;
+    height: 70px;
+}
+
+#uc-cart-checkout-form .address-pane-table tr td {
+    display: block;
+    font-weight: normal;
+    text-align: left;
+}
+
+#uc-cart-checkout-form .address-pane-table tr td .form-item {
+    width: 100%;   
+}
+
+#uc-cart-checkout-form .address-pane-table input.form-text {
+    
+}
+
+#uc-cart-checkout-form .address-pane-table select.form-select {
+    width: 83%;
+}

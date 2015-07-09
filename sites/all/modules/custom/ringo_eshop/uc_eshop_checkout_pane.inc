@@ -80,7 +80,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
     //CHECKOUT FORM
     case 'view':
       $contents['download_link'] = array(
-        '#markup' => t('Download Contract and sign it !link', array('!link' => l(t('contract'), '<front>'))),
+        '#markup' => "<div class='contact-info-download-link-wrapper'>".t('Download Contract and sign it !link', array('!link' => l(t('contract'), '<front>')))."</div>",
       );
       $contents['contact_title'] = array(
         '#title' => t('Title'),
