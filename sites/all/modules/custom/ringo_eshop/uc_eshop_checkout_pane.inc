@@ -25,6 +25,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
       $contents['id_expiry_date'] = array(
         '#title' => t('Expiry date'),
         '#type' => 'date_popup',
+        '#required' => TRUE,
         '#date_format' => 'm/d/Y',
         '#date_label_position' => 'within',
         '#date_increment' => 15,
