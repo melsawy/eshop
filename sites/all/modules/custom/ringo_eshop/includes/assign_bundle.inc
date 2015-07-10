@@ -263,6 +263,7 @@ function assign_international_bundle_form($form_state, $international_promotions
   $user_regions = array();
   // Add bundle field set.
   $form['select-int-bundle'] = array(
+    '#prefix' => '<div id="tabs-2">',
     '#type' => 'fieldset',
     '#title' => t('International bundle'),
   );
@@ -313,6 +314,7 @@ function assign_international_bundle_form($form_state, $international_promotions
     '#type' => 'button',
     '#value' => t('Add package'),
     '#attributes' => array('onclick' => '_assign_international_bundle();return false;'),
+    '#suffix' => '</div>',
     //'#markup' => '<div class="add_package" onclick="_assign_international_bundle();">'. t('Add package') .'</div>',
   );
 
@@ -395,25 +397,19 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
 
     $options = array();
     $row['data'][] = array('data' => t($type), 'class' => array('package'));
-
-
     $row['data'][] = array(
       'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => 0)) . '<br />'
         . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => 0)),
       'package-id' => -1,
     );
-
     $options[-1] = "Nothing";
-
     foreach ($packages as $size => $package) {
       $cell = array(
         'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => $package['quantity'])) . '<br />'
         . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => $package['price'])),
         'package-id' => $package['id'],
       );
-
       $options[$package['id']] = $package['service_name'];
-
       if (!is_null($user_bundles)) {
         // Find out if this cell is already taken.
         if (is_array($user_bundles->simPromotions)) {
@@ -429,16 +425,12 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
           }
         }
       }
-
       $row['data'][] = $cell;
-
       if (!in_array($size, $headers)) {
         $headers[] = $size;
       }
     }
-
     $rows[] = $row;
-
     $form[strtolower($type)] = array(
       '#type' => 'radios',
       '#title' => $type,
@@ -446,10 +438,10 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
     );
   }
   $form['select-nat-bundle'] = array(
+    '#prefix' => '<div id="tabs-1">',
     '#type' => 'fieldset',
     '#title' => t('National bundles'),
   );
-
   $form['select-nat-bundle']['nat-table'] = array(
     '#prefix' => '<div id ="nat-bundle-options">',
     '#markup' => theme(
@@ -459,12 +451,12 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
         'attributes' => array('class' => array('nat-bundle')),
       )
     ),
-    '#suffix' => '</div>',
+    '#suffix' => '</div></div>',
   );
   $form['select-nat-bundle']['skip'] = array(
     '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
   );
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
+  //_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   return $form;
 }
 

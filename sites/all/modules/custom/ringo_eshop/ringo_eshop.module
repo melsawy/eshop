@@ -65,7 +65,7 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
-    drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
+    //drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
@@ -84,9 +84,12 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     //$form['attributes'][4]['#description'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text));
     $form['attributes'][4]['#prefix'] = '<div id="national-bundle-details">';
     $form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
-    $form += _ringo_eshop_build_national_offers();
     $form['attributes'][5]['#prefix'] = '<div id="international-bundle-details">';
     $form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
+    $form['tabs'] = array(
+      '#markup' => '<div id="tabs"><ul><li><a href="#tabs-1">Tab 1</a></li><li><a href="#tabs-2">Tab 2</a></li></ul>',
+    );
+    $form += _ringo_eshop_build_national_offers();
     $form += _ringo_eshop_build_international_offers();
   }
 }
@@ -228,5 +231,7 @@ function ringo_eshop_init() {
     $sim_id = variable_get('ringo_eshop_sim_id', 30);
     drupal_goto('node/'. $sim_id);
   }
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
+  drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
 }
 
