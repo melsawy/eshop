@@ -27,6 +27,15 @@ function ringo_eshop_menu() {
 
 function ringo_eshop_uc_checkout_pane() {
   $panes[] = array(
+    'id' => 'horizontal_browsing_tabs',
+    'title' => null,
+    'desc' => null ,
+    'callback' => 'ringo_eshop_horizontal_browsing_tabs_pane_checkout',
+    'process' => FALSE,
+    'weight' => -10,
+   );
+    
+  $panes[] = array(
     'id' => 'id_document',
     'title' => t('ID Document'),
      'desc' => t('Provide customers to add ID document information'),

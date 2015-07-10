@@ -124,6 +124,47 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
   }
 }
 
+
+/**
+* Horizontal Browsing Tabs
+*/
+function ringo_eshop_horizontal_browsing_tabs_pane_checkout($op, &$order, $form = NULL, &$form_state = NULL) {
+     switch($op) {
+        //CHECKOUT FORM
+        case 'view':
+        $contents = array() ;
+        $rows = array() ; 
+        $headers = array() ; 
+        $attributes = array('class' => 'eshop-checkout-sroll-table') ;  
+         
+        drupal_add_js(drupal_get_path("module", "ringo_eshop")."/js/eshop_checkout.js") ;
+        
+        $row_text = t('Your Information') ;
+        $scoll_to_id = "customer-pane" ;   
+        $rows[0][0] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
+         
+        $row_text = t('ID Document') ;
+        $scoll_to_id = "id_document-pane" ;    
+        $rows[0][1] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
+
+        $row_text = t('Shipping Address') ;
+        $scoll_to_id = "delivery-pane" ;            
+        $rows[0][2] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
+         
+        $row_text = t('Payment') ;
+        $scoll_to_id = "payment-pane" ;            
+        $rows[0][3] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
+         
+         
+        $table = array('header' => $headers, 'rows' => $rows, 'attributes' => $attributes, 'sticky' => FALSE); 
+         
+        $contents['eshop_horizontal_browsing_tabs'] = array(
+            '#markup' => theme('table', $table),
+        );
+         
+        return array('description' => '', 'contents' => $contents);
+     }
+}
 /**
  * Contact info checkout pane function
  */
