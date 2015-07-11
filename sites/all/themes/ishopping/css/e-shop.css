@@ -153,7 +153,7 @@ table.nat-bundle tr th {
     font-weight: bold;
     padding-bottom: 10px;
 }
-.attribute.attribute-4.odd {
+#tabs {
     clear: both;
 }
 .button.edit-add-package {
