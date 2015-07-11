@@ -197,7 +197,7 @@ function int_bundle_cmp($a, $b) {
  */
 function get_international_table($region_data, $show_radios = TRUE, $taken_bundles = array()) {
   $rows = array();
-  $selectable = $show_radios && user_is_logged_in();
+  $selectable = $show_radios;
 
   // Sort the int bundles.
   uasort($region_data['bundles'], 'int_bundle_cmp');
