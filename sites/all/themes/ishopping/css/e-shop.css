@@ -292,6 +292,9 @@ table.nat-bundle tr th {
 form a, form a:visited {
   color: #AD56D7;
 }
+.form-item .description {
+    float: none;   
+}
 
 /**
 * Checkout Page : Horizontal Scrolling Tabs
@@ -394,3 +397,10 @@ ul.language-switcher-locale-url li.active{
   background-color:rgb(162, 66, 159);     
 }
 
+
+/*
+* Sim-card management page
+*/
+.eshop-manage-simcards-table {
+    margin-top: 1em;   
+}

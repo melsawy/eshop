@@ -8,6 +8,10 @@ require_once dirname(__FILE__) . '/soap/DealerWs/DealerWs.php';
 require_once dirname(__FILE__) . '/soap/ManagementWs/ManagementWs.php';
 require_once dirname(__FILE__) . '/uc_eshop_checkout_pane.inc';
 
+
+/**
+* Implement of hook_menu().
+*/
 function ringo_eshop_menu() {
   $items = array();
   $items['my-ringo/manage-bundles'] = array(
@@ -19,8 +23,32 @@ function ringo_eshop_menu() {
     'file' => 'assign_bundle.inc',
     'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
   );
+  $items['manage/sim-cards'] = array(
+    'title' => t('Manage Sim-cards'),
+    'page callback' => '_ringo_eshop_manage_simcards',
+    'access arguments' => array('Administer product options'),
+    'file' => 'manage_simcards.inc',
+    'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
+  );        
   return $items;
 }
+
+/*
+ * Implement of hook_theme().
+ */
+function ringo_eshop_theme(){
+    return array(
+        'manage_simcards_template' => array(
+            // file name will be custom-page.tpl.php
+            'variables' => array('options' => null),
+            'template' => "manage-simcards",
+            'path' => drupal_get_path("module", "ringo_eshop")."/templates" ,
+        ),
+    );
+}
+
+
+
 /**
  * Implementation of hook_uc_checkout_pane()
  */
