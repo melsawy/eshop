@@ -197,11 +197,10 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       $field_tax_code = field_get_items('user', $user_profile, 'field_tax_code');
       $field_tax_code_output = field_view_value('user', $user_profile, 'field_tax_code', $field_tax_code[0]);               $tax_code_value = !empty($order->data['tax_code']) ? $order->data['tax_code'] : $field_tax_code_output['#markup'];    
       // load Date of birth field
-      $field_date_of_birth_output = array() ; 
-      $field_date_of_birth_output['#markup'] = "" ; 
       $field_date_of_birth  = field_get_items('user', $user_profile, 'field_date_of_birth');
-      $field_date_of_birth_output = field_view_value('user', $user_profile, 'field_date_of_birth', $field_date_of_birth[0]);         
-      $contact_birth_date_value = !empty($order->data['contact_birth_date']) ? $order->data['contact_birth_date'] : $field_date_of_birth_output['#markup'];          
+      $field_date_of_birth_output = field_view_value('user', $user_profile, 'field_date_of_birth', $field_date_of_birth[0]);  
+      $field_date_of_birth_output_markup = !empty($field_date_of_birth_output['#markup']) ? $field_date_of_birth_output['#markup'] : "" ; 
+      $contact_birth_date_value = !empty($order->data['contact_birth_date']) ? $order->data['contact_birth_date'] : $field_date_of_birth_output_markup ;          
       // load Gender field
       $field_gender_output['#markup'] = "" ; 
       $field_gender = field_get_items('user', $user_profile, 'field_gender');
