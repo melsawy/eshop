@@ -281,6 +281,10 @@ table.nat-bundle tr th {
     width: 83%;
 }
 
+form a, form a:visited {
+  color: #AD56D7;
+}
+
 /**
 * Checkout Page : Horizontal Scrolling Tabs
 */
@@ -340,4 +344,45 @@ table.eshop-checkout-sroll-table td.checkout-scroll-tab:hover:after {
 }
 
 
+/**
+* Frontpage CSS Updates
+*/
+.slideshow-pager .views-field-view-node .field-content a {
+    background-color:  rgb(70, 26, 101) ;    
+}
+.slideshow-pager .views-field-view-node .field-content a:hover{
+    background-color: #72127E ;
+}
+
+#main-wrapper .container-inner {
+    background-color: #fff;   
+}
+
+html.js .uc_out_of_stock_throbbing {
+    display: none;   
+}
+/**
+* Language Switcher
+*/
+.language-switcher-locale-url {
+    position: relative;
+    top: 20px;
+}
+
+ul.language-switcher-locale-url li {
+  float: right;
+  margin: 0 .5em;
+  padding: 5px 10px;
+  background-color: rgb(0, 168, 213);
+  border-radius: 2px;
+}
+
+ul.language-switcher-locale-url li a {
+  text-decoration: none;   
+}
+
+ul.language-switcher-locale-url li:hover,
+ul.language-switcher-locale-url li.active{
+  background-color:rgb(162, 66, 159);     
+}
 

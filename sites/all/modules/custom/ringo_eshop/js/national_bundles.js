@@ -5,7 +5,7 @@
             //adjust elements for natinal bundles
             jQuery('#tabs').tabs();
             jQuery('div.attribute-4, div.attribute-5').hide();
-            jQuery('table.nat-bundle td:not(.package, .disabled)').on('click', function () {
+            jQuery('table.nat-bundle td:not(.package, .disabled)').click(function () {
                 jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
 
                 var package_id = jQuery(this).attr('package-id');
