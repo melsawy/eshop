@@ -197,6 +197,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       $field_tax_code = field_get_items('user', $user_profile, 'field_tax_code');
       $field_tax_code_output = field_view_value('user', $user_profile, 'field_tax_code', $field_tax_code[0]);               $tax_code_value = !empty($order->data['tax_code']) ? $order->data['tax_code'] : $field_tax_code_output['#markup'];    
       // load Date of birth field
+      $field_date_of_birth_output = array() ; 
       $field_date_of_birth_output['#markup'] = "" ; 
       $field_date_of_birth  = field_get_items('user', $user_profile, 'field_date_of_birth');
       $field_date_of_birth_output = field_view_value('user', $user_profile, 'field_date_of_birth', $field_date_of_birth[0]);         
@@ -206,6 +207,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       $field_gender = field_get_items('user', $user_profile, 'field_gender');
       $field_gender_output = field_view_value('user', $user_profile, 'field_gender', $field_gender[0]);                     $contact_gender_value = !empty($order->data['contact_gender']) ? $order->data['contact_gender'] : $field_gender_output['#markup'] ; 
       // load Country Birth field
+      $field_country_birth_output = array() ; 
       $field_country_birth_output['#markup'] = "" ; 
       $field_country_birth = field_get_items('user', $user_profile, 'field_country_of_birth');
       $field_country_birth_output = field_view_value('user', $user_profile, 'field_country_of_birth', $field_country_birth[0]);                     
