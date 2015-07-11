@@ -1,52 +1,30 @@
-jQuery(document).ready(function() {
-    //adjust elements for natinal bundles
-    jQuery('.form-item-voice, .form-item-sms, .form-item-data').hide();
-    var nat_options = jQuery('#edit-select-nat-bundle');
-    jQuery('#national-bundle-details').prepend(nat_options);
-    jQuery('#edit-attributes-4').hide();
+(function ($) {
+    // All your code here
+    Drupal.behaviors.eshop_card = {
+        attach: function (context) {
+            //adjust elements for natinal bundles
+            jQuery('#tabs').tabs();
+            jQuery('div.attribute-4, div.attribute-5').hide();
+            jQuery('table.nat-bundle td:not(.package, .disabled)').on('click', function () {
+                jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
 
-    jQuery( "select#edit-attributes-2" ).change(function() {
-        if (jQuery(this).val()) {
-            jQuery('#national-bundle-details').show();
-        }
-        else {
-            jQuery('#national-bundle-details').hide();
-        }
-    });
-    jQuery( "select#edit-attributes-2").trigger('change');
-    jQuery('table.nat-bundle td:not(.package, .disabled)').on('click', function () {
-        jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
+                var package_id = jQuery(this).attr('package-id');
+                var group = jQuery(this).parent().attr('group');
 
-        var package_id = jQuery(this).attr('package-id');
-        var group = jQuery(this).parent().attr('group');
-
-        if (jQuery(this).hasClass('selected-cell')) {
-            jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', true);
+                if (jQuery(this).hasClass('selected-cell')) {
+                    jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', true);
+                }
+                else {
+                    jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', false);
+                }
+                updateSummary();
+            });
         }
-        else {
-            jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', false);
-        }
-        updateSummary();
-    });
+    }
     updateSummary();
+})(jQuery);
 
-    // adjust element for international bundles
-    var internat_options = jQuery('#edit-select-int-bundle');
-    jQuery('#international-bundle-details').prepend(internat_options);
-    jQuery('#edit-attributes-5').hide();
-    jQuery('#international-bundle-details').hide();
-});
 
-function toggle_bundle(bundle) {
-    if (bundle == 'international') {
-        jQuery('#international-bundle-details').show();
-        jQuery('#national-bundle-details').hide();
-    }
-    else {
-        jQuery('#international-bundle-details').hide();
-        jQuery('#national-bundle-details').show();
-    }
-}
 
 function updateSummary() {
   if (jQuery('table.nat-bundle').length == 0) {

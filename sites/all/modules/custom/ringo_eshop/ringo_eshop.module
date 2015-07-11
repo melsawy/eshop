@@ -72,9 +72,11 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
 }
 
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
+  drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
-    //drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
@@ -90,16 +92,25 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
         '!price' => '<span class="purple-color"><span class="total">0</span>',
         '!blue_end' => '</span>',
       ));
-    //$form['attributes'][4]['#description'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text));
-    $form['attributes'][4]['#prefix'] = '<div id="national-bundle-details">';
-    $form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
-    $form['attributes'][5]['#prefix'] = '<div id="international-bundle-details">';
-    $form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
+    //$form['attributes'][4]['#prefix'] = '<div id="national-bundle-details">';
+    //$form['attributes'][4]['#suffix'] = format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
+    //$form['attributes'][5]['#prefix'] = '<div id="international-bundle-details">';
+    //$form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
     $form['tabs'] = array(
-      '#markup' => '<div id="tabs"><ul><li><a href="#tabs-1">Tab 1</a></li><li><a href="#tabs-2">Tab 2</a></li></ul>',
+      '#prefix' => '<div id="tabs">',
+      '#markup' => '<ul><li><a href="#tabs-1">National bundle</a></li><li><a href="#tabs-2">International bundle</a></li></ul>',
+      '#weight' => 0,
     );
     $form += _ringo_eshop_build_national_offers();
     $form += _ringo_eshop_build_international_offers();
+    $nat_desc = '<div id="national-bundle-details">' . format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
+    $internat_desc = '<div id="international-bundle-details">' . format_string('<p class="internat-bundle-desc"></p>') .'</div>';
+    $form['tabs_close'] = array(
+      '#markup' => '</div>',
+      '#suffix' => $nat_desc . $internat_desc,
+      '#weight' => 3,
+    );
+    $form['qty']['#weight'] = 4;
   }
 }
 
@@ -138,23 +149,11 @@ function ringo_eshop_uc_cart_item_delete($entity) {
 }
 
 function _ringo_eshop_build_national_offers() {
-  $national_offers = array();
-  $cid = 'national_offers';
-  if ($cache = cache_get($cid)) {
-    $national_offers = $cache->data;
-  }
   $national_offers = get_national_offers();
   return assign_national_bundle_form($national_offers);
 }
 
 function _ringo_eshop_build_international_offers() {
-  $international_offers = array();
-  $cid = 'international_offers';
-  if ($cache = cache_get($cid)) {
-    $international_offers = $cache->data;
-  }
-  //$international_offers = get_international_offers();
-  //return _ringo_eshop_assign_international_bundle_form($international_offers);
   return drupal_get_form('assign_eshop_international_bundle_form');
 }
 
@@ -240,7 +239,5 @@ function ringo_eshop_init() {
     $sim_id = variable_get('ringo_eshop_sim_id', 30);
     drupal_goto('node/'. $sim_id);
   }
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
-  drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
 }
 

@@ -266,6 +266,7 @@ function assign_international_bundle_form($form_state, $international_promotions
     '#prefix' => '<div id="tabs-2">',
     '#type' => 'fieldset',
     '#title' => t('International bundle'),
+    '#weight' => 2,
   );
   $regions = array();
   $table_region = NULL;
@@ -315,12 +316,8 @@ function assign_international_bundle_form($form_state, $international_promotions
     '#value' => t('Add package'),
     '#attributes' => array('onclick' => '_assign_international_bundle();return false;'),
     '#suffix' => '</div>',
-    //'#markup' => '<div class="add_package" onclick="_assign_international_bundle();">'. t('Add package') .'</div>',
   );
 
-  $form['select-int-bundle']['skip'] = array(
-    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'national\');">'. t('Go to national bundle') .'</div>',
-  );
   return $form;
 }
 
@@ -431,16 +428,19 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
       }
     }
     $rows[] = $row;
+    /*
     $form[strtolower($type)] = array(
       '#type' => 'radios',
       '#title' => $type,
       '#options' => $options,
     );
+    */
   }
   $form['select-nat-bundle'] = array(
     '#prefix' => '<div id="tabs-1">',
     '#type' => 'fieldset',
     '#title' => t('National bundles'),
+    '#weight' => 1,
   );
   $form['select-nat-bundle']['nat-table'] = array(
     '#prefix' => '<div id ="nat-bundle-options">',
@@ -453,10 +453,6 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
     ),
     '#suffix' => '</div></div>',
   );
-  $form['select-nat-bundle']['skip'] = array(
-    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'international\');">'. t('Go to international bundle') .'</div>',
-  );
-  //_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   return $form;
 }
 
