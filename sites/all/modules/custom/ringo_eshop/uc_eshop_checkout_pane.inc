@@ -180,34 +180,43 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       global $user ; 
       $user_profile = user_load($user->uid) ;
       // load title field
+      $field_user_title_output['#markup'] = "" ; 
       $field_user_title = field_get_items('user', $user_profile, 'field_customer_title');
       $field_user_title_output = field_view_value('user', $user_profile, 'field_customer_title', $field_user_title[0]);
       $contact_title_value = !empty($order->data['contact_title']) ? $order->data['contact_title'] : $field_user_title_output['#markup'];
       // load first name field
+      $field_first_name_output['#markup'] = "" ; 
       $field_first_name = field_get_items('user', $user_profile, 'field_first_name');
       $field_first_name_output = field_view_value('user', $user_profile, 'field_first_name', $field_first_name[0]);         $first_name_value = !empty($order->data['first_name']) ? $order->data['first_name'] : $field_first_name_output['#markup'];
       // load last name field
+      $field_last_name_output['#markup'] = "" ;
       $field_last_name = field_get_items('user', $user_profile, 'field_last_name');
       $field_last_name_output = field_view_value('user', $user_profile, 'field_last_name', $field_last_name[0]);           $last_name_value = !empty($order->data['last_name']) ? $order->data['last_name'] : $field_last_name_output['#markup'];  
       // load Tax Code field
+      $field_tax_code_output['#markup'] = "" ; 
       $field_tax_code = field_get_items('user', $user_profile, 'field_tax_code');
       $field_tax_code_output = field_view_value('user', $user_profile, 'field_tax_code', $field_tax_code[0]);               $tax_code_value = !empty($order->data['tax_code']) ? $order->data['tax_code'] : $field_tax_code_output['#markup'];    
       // load Date of birth field
+      $field_date_of_birth_output['#markup'] = "" ; 
       $field_date_of_birth  = field_get_items('user', $user_profile, 'field_date_of_birth');
       $field_date_of_birth_output = field_view_value('user', $user_profile, 'field_date_of_birth', $field_date_of_birth[0]);         
       $contact_birth_date_value = !empty($order->data['contact_birth_date']) ? $order->data['contact_birth_date'] : $field_date_of_birth_output['#markup'];          
       // load Gender field
+      $field_gender_output['#markup'] = "" ; 
       $field_gender = field_get_items('user', $user_profile, 'field_gender');
       $field_gender_output = field_view_value('user', $user_profile, 'field_gender', $field_gender[0]);                     $contact_gender_value = !empty($order->data['contact_gender']) ? $order->data['contact_gender'] : $field_gender_output['#markup'] ; 
       // load Country Birth field
+      $field_country_birth_output['#markup'] = "" ; 
       $field_country_birth = field_get_items('user', $user_profile, 'field_country_of_birth');
       $field_country_birth_output = field_view_value('user', $user_profile, 'field_country_of_birth', $field_country_birth[0]);                     
       $country_birth_value = !empty($order->data['country_birth']) ? $order->data['country_birth'] : $field_country_birth_output['#markup'] ;    
       // load City Birth field
+      $field_city_birth_output['#markup'] = "" ;
       $field_city_birth = field_get_items('user', $user_profile, 'field_city_of_birth');
       $field_city_birth_output = field_view_value('user', $user_profile, 'field_city_of_birth', $field_city_birth[0]);                     
       $city_birth_value = !empty($order->data['city_birth']) ? $order->data['city_birth'] : $field_city_birth_output['#markup'] ; 
       // load Province Birth field
+      $field_province_birth_output['#markup'] = "" ; 
       $field_province_birth = field_get_items('user', $user_profile, 'field_province_of_birth');
       $field_province_birth_output = field_view_value('user', $user_profile, 'field_province_of_birth', $field_province_birth[0]);                     
       $province_birth_value = !empty($order->data['province_birth']) ? $order->data['province_birth'] : $field_province_birth_output['#markup'] ; 
