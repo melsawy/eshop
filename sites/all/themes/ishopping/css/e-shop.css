@@ -280,6 +280,14 @@ table.nat-bundle tr th {
 #uc-cart-checkout-form .address-pane-table select.form-select {
     width: 83%;
 }
+#uc-cart-checkout-form  .container-inline-date {
+    clear: none;  
+}
+#uc-cart-checkout-form .form-item-panes-ringo-contact-info-contact-title,
+#uc-cart-checkout-form .form-item-contract-file{
+    width: 100%;
+    padding-right: 40%;
+}
 
 form a, form a:visited {
   color: #AD56D7;

@@ -284,16 +284,19 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#options' => countries_get_countries('name', array('enabled' => COUNTRIES_ENABLED)),
           
       );
+
+      $contents['province_birth'] = array(
+        '#title' => t('Province of birth'),
+        '#type' => 'textfield',
+        '#default_value' => $province_birth_value,  
+      );      
+      
       $contents['city_birth'] = array(
         '#title' => t('City of birth'),
         '#type' => 'textfield',
         '#default_value' => $city_birth_value,  
       );
-      $contents['province_birth'] = array(
-        '#title' => t('Province of birth'),
-        '#type' => 'textfield',
-        '#default_value' => $province_birth_value,  
-      );
+
       $contents['contract_file'] = array(
         '#type' => 'file',
         '#title' => t('Upload signed contract'),
