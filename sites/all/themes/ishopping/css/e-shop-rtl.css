@@ -1,3 +1,16 @@
+ul#secondary-menu-links,
+#main-wrapper .container-inner > .grid:first-child {
+  float: left;
+
+}
+.grid,
+#logo {
+  float: right;
+}
+.region-header {
+  float: left;
+  clear: left;
+}
 #page {
 	background-image:none;
 	background-color:#5D2A75;
