@@ -38,7 +38,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#type' => 'file',
         '#title' => t('Image'),
         '#name' => 'id_card_image',
-        '#required' => TRUE,
+        '#required' => !empty($order->data['id_expiry_date_fid']) ? false  : true ,
         '#value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : "" , 
         '#description' => t('Upload ID card & Tax code'),
       );
@@ -274,7 +274,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#title' => t('Upload signed contract'),
         '#name' => 'contract_file',
         '#default_value' => !empty($order->data['contract_date_fid']) ? $order->data['contract_date_fid'] : "" ,  
-        '#required' => TRUE,
+        '#required' => !empty($order->data['contract_date_fid']) ? false : true ,  
       );
       return array('description' => '', 'contents' => $contents);
 
