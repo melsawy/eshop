@@ -126,7 +126,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     //$form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
     $form['tabs'] = array(
       '#prefix' => '<div id="tabs">',
-      '#markup' => '<ul><li><a href="#tabs-1">National bundle</a></li><li><a href="#tabs-2">International bundle</a></li></ul>',
+      '#markup' => '<ul><li><a href="#tabs-1">'. t('National Offers') .'</a></li><li><a href="#tabs-2">'. t('International Offers') .'</a></li></ul>',
       '#weight' => 0,
     );
     $form += _ringo_eshop_build_national_offers();

@@ -439,7 +439,7 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
   $form['select-nat-bundle'] = array(
     '#prefix' => '<div id="tabs-1">',
     '#type' => 'fieldset',
-    '#title' => t('National bundles'),
+    '#title' => t('National Offers'),
     '#weight' => 1,
   );
   $form['select-nat-bundle']['nat-table'] = array(
