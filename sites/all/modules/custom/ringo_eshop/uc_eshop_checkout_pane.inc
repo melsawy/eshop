@@ -274,7 +274,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#title' => t('Upload signed contract'),
         '#name' => 'contract_file',
         '#default_value' => !empty($order->data['contract_date_fid']) ? $order->data['contract_date_fid'] : "" ,  
-        //'#required' => TRUE,
+        '#required' => TRUE,
       );
       return array('description' => '', 'contents' => $contents);
 
@@ -297,7 +297,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         return FALSE;          
       }
       _eshop_upload_files('contract_file', $order, 'contract_date_fid');
-          
+
       return TRUE;
 
     //CHECKOUT REVIEW
