@@ -60,37 +60,9 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         return FALSE;          
       }
       
-      // id_card File Upload Validation 
-        $id_card_image = 'id_card_image';
-        //  make sure we upload an image
-        $validators = array(
-           'file_validate_is_image' => array(),
-        );      
- 
-        foreach ($_FILES as $key => $value) {
-            if ($key == $id_card_image) {
-                foreach ($value as $fkey => $fvalue) {
-                    $_FILES['files'][$fkey][$id_card_image] = $fvalue;
-                }
-            }
-        }
+      // id_card File Upload Validation
+      _eshop_upload_files('id_card_image', $order, 'id_expiry_date_fid');
 
-        // if file exist then save it
-        if(!empty($_FILES[$id_card_image])) {
-            // temprorarly save the file
-            $id_card_saved_file = file_save_upload($id_card_image, $validators, 'public://');
-            if($id_card_saved_file) {
-                // permenantly save the file
-                $id_card_saved_file->status = FILE_STATUS_PERMANENT;
-                // Save file status.
-                file_save($id_card_saved_file); 
-                // Add FID to Object
-                $order->data['id_expiry_date_fid'] = $id_card_saved_file->fid ; 
-            }
-        }
-           
-      // End of :  id_card File Upload Validation 
-      
       $order->data['id_type'] = $form_state['values']['panes']['id_document']['id_type'];
       $order->data['id_number'] = $form_state['values']['panes']['id_document']['id_number'];
       $order->data['id_expiry_date'] = $form_state['values']['panes']['id_document']['id_expiry_date'];
@@ -302,7 +274,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#title' => t('Upload signed contract'),
         '#name' => 'contract_file',
         '#default_value' => !empty($order->data['contract_date_fid']) ? $order->data['contract_date_fid'] : "" ,  
-        '#required' => TRUE,
+        //'#required' => TRUE,
       );
       return array('description' => '', 'contents' => $contents);
 
@@ -323,39 +295,9 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       if(!ctype_digit($form_state['values']['panes']['ringo_contact_info']['tax_code'])) {
         form_set_error('panes][ringo_contact_info][tax_code', t('You must enter a valid Tax code number.'));
         return FALSE;          
-      }      
-      
-      // Contract File Upload Validation 
-        $contract_file = 'contract_file';
-        //  make sure we upload an image
-        $validators = array(
-           'file_validate_extensions' => array('pdf doc docx png jpg jpeg'),
-        ); 
-
-        foreach ($_FILES as $key => $value) {
-            if ($key == $contract_file) {
-                foreach ($value as $fkey => $fvalue) {
-                    $_FILES['files'][$fkey][$contract_file] = $fvalue;
-                }
-            }
-        }
-
-        // if file exist then save it
-        if(!empty($_FILES[$contract_file])) {
-            // temprorarly save the file
-            $contract_saved_file = file_save_upload($contract_file, $validators, 'public://');
-            if($contract_saved_file) {
-                // permenantly save the file
-                $contract_saved_file->status = FILE_STATUS_PERMANENT;
-                // Save file status.
-                file_save($contract_saved_file); 
-                // Add FID to Object
-                $order->data['contract_date_fid'] = $contract_saved_file->fid ; 
-            }
-        }
-           
-      // End of :  Contract File Upload Validation      
-      
+      }
+      _eshop_upload_files('contract_file', $order, 'contract_date_fid');
+          
       return TRUE;
 
     //CHECKOUT REVIEW
@@ -379,5 +321,32 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       );
       }      
       return $message;
+  }
+}
+
+function _eshop_upload_files($file_id, &$order, $order_key) {
+  //  make sure we upload an image
+  $validators = array(
+    'file_validate_extensions' => array('pdf doc docx png jpg jpeg'),
+  );
+  foreach ($_FILES as $key => $value) {
+    if ($key == $file_id) {
+      foreach ($value as $fkey => $fvalue) {
+        $_FILES['files'][$fkey][$file_id] = $fvalue;
+      }
+    }
+  }
+  // if file exist then save it
+  if(!empty($_FILES[$file_id])) {
+    // temprorarly save the file
+    $saved_file = file_save_upload($file_id, $validators, 'public://', FILE_EXISTS_RENAME);
+    if($saved_file) {
+      // permenantly save the file
+      $saved_file->status = FILE_STATUS_PERMANENT;
+      // Save file status.
+      file_save($saved_file);
+      // Add FID to Object
+      $order->data[$order_key] = $saved_file->fid ;
+    }
   }
 }
