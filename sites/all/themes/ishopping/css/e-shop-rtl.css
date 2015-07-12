@@ -147,10 +147,107 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 }
 
 
-/*
-* Checkout Page : Forms
-*/
-/*
-#uc-cart-checkout-form .address-pane-table tr td {
+/**
+* Frontpage Improvments
+*/ 
+.poll .vote-form .form-item-choice,
+.poll .vote-form .choices .title{
     text-align: right;
-}*/
+}
+
+.poll .vote-form input.form-radio {
+    float:right;
+}
+
+#menu-bar-wrapper #block-search-form {
+    float: left;
+}
+
+.block .sf-menu.sf-style-ishopping#superfish-1 {
+    float: right;
+}
+
+.block .sf-menu.sf-style-ishopping#superfish-1 > li {
+    background: url(../images/line-menu.png) no-repeat left center;   
+}
+
+#search-block-form .form-text {
+  background: url(../images/ico-search.png) no-repeat 96% 5px #fff;
+  padding: 5px 25px 5px 5px;
+}
+
+.block ul.menu li.expanded li.leaf a {
+    background: url(../images/bullet4.png) 100% 13px no-repeat;   
+}
+
+.block ul.menu li a {
+    background: url(../images/arrow-7-rtl.png) 100% 12px no-repeat;    
+}
+
+#search-form .form-item-keys,
+#search-form .form-item-keys label{
+    float: right;
+}
+
+.item-list .view-newest-tags li {
+    float: right;
+}
+
+#quicktabs-quicktabs ul.quicktabs-tabs li {
+    float:right;
+}
+
+#panel-first-wrapper .on-the-web {
+    float: right;
+    padding: 0 0px 5px 10px;
+}
+
+#main-content .galleryformatter {
+    float: right;
+    margin: .5em 0em 2em 2em;
+}
+
+#main-content .gallery-processed .gallery-slides .gallery-slide {
+    right: 0;   
+}
+
+#main-content .galleryformatter-greenarrows .gallery-thumbs li {
+    float: right;
+}
+
+.field-type-taxonomy-term-reference .field-label {
+    float: right;
+}
+
+.node-content .model.product-info {
+   display: block;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 1em;
+  text-align: right;   
+}
+
+.node-content .model.product-info .product-info-label  {
+    float: right;
+}
+
+.node-content .uc-out-stock-processed .attributes input.form-radio {
+    float: none;   
+}
+
+.node-content .display-price {
+    float: none;
+    clear: none;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    float: right;
+}
+
+.views-field-display-price {
+    float: right;
+}
+
+.views-field-addtocartlink {
+    float: left;
+}

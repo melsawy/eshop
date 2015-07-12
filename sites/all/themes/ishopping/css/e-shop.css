@@ -397,6 +397,10 @@ ul.language-switcher-locale-url li.active{
    background-color: rgb(0, 168, 213);   
 }
 
+#sidebar-first-wrapper .view-big-sale .skin-default {
+    min-height: 100px;   
+}
+
 
 /*
 * Sim-card management page
