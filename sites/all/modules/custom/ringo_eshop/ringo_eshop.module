@@ -40,7 +40,7 @@ function ringo_eshop_theme(){
     return array(
         'manage_simcards_template' => array(
             // file name will be custom-page.tpl.php
-            'variables' => array('options' => null),
+            'variables' => array('options' => null, 'num_status' => null),
             'template' => "manage-simcards",
             'path' => drupal_get_path("module", "ringo_eshop")."/templates" ,
         ),
