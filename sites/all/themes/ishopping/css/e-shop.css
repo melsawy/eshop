@@ -384,7 +384,7 @@ ul.language-switcher-locale-url li {
   float: right;
   margin: 0 .5em;
   padding: 5px 10px;
-  background-color: rgb(0, 168, 213);
+  background-color:rgb(162, 66, 159); 
   border-radius: 2px;
 }
 
@@ -394,7 +394,7 @@ ul.language-switcher-locale-url li a {
 
 ul.language-switcher-locale-url li:hover,
 ul.language-switcher-locale-url li.active{
-  background-color:rgb(162, 66, 159);     
+   background-color: rgb(0, 168, 213);   
 }
 
 
