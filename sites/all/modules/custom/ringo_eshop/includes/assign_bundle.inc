@@ -229,7 +229,7 @@ function get_international_table($region_data, $show_radios = TRUE, $taken_bundl
       '#type' => 'tableselect',
       '#header' => $headers,
       '#options' => $rows,
-      '#multiple' => FALSE,
+      '#multiple' => TRUE,
       '#attributes' => array('class' => array('int-bundle')),
     );
   }
@@ -265,7 +265,7 @@ function assign_international_bundle_form($form_state, $international_promotions
   $form['select-int-bundle'] = array(
     '#prefix' => '<div id="tabs-2">',
     '#type' => 'fieldset',
-    '#title' => t('International bundle'),
+    '#title' => t('International Offers'),
     '#weight' => 2,
   );
   $regions = array();
