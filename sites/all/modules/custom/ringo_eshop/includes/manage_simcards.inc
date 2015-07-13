@@ -82,7 +82,7 @@ function esho_add_sim_form_validate($form, &$form_state) {
     form_set_error('simcard_number', t('Sim-card number must be numeric value')) ;
   }
 
-  if(!ctype_digit($simcard_price)) {
+  if(!is_numeric($simcard_price)) {
     form_set_error('simcard_price', t('Sim-card price must be numeric value')) ;
   }
 }
