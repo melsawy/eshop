@@ -15,14 +15,14 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
           'ID' => t('ID'),
           'Passport' => t('Passport'),
         ),
-        '#default_value' => !empty($order->data['id_type']) ? $order->data['id_type'] : "",  
+        '#default_value' => !empty($order->data['id_type']) ? $order->data['id_type'] : t('n/a'),  
         '#required' =>  TRUE,
       );
       $contents['id_number'] = array(
         '#type' => 'textfield',
         '#title' => t('Number'),
         '#required' => TRUE,
-        '#default_value' => !empty($order->data['id_number']) ? $order->data['id_number'] : "",
+        '#default_value' => !empty($order->data['id_number']) ? $order->data['id_number'] : t('n/a'),
       );
       $contents['id_expiry_date'] = array(
         '#title' => t('Expiry date'),
@@ -32,14 +32,14 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#date_label_position' => 'within',
         '#date_increment' => 15,
         '#date_year_range' => '0:+8',
-        '#default_value' => !empty($order->data['id_expiry_date']) ? $order->data['id_expiry_date'] : "",  
+        '#default_value' => !empty($order->data['id_expiry_date']) ? $order->data['id_expiry_date'] : t('n/a'),  
       );
       $contents['id_card_image'] = array(
         '#type' => 'file',
         '#title' => t('Image'),
         '#name' => 'id_card_image',
         '#required' => !empty($order->data['id_expiry_date_fid']) ? false  : true ,
-        '#value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : "" , 
+        '#value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : t('n/a') , 
         '#description' => t('Upload ID card & Tax code'),
       );
       return array('description' => '', 'contents' => $contents);
@@ -109,7 +109,7 @@ function ringo_eshop_horizontal_browsing_tabs_pane_checkout($op, &$order, $form 
         $headers = array() ; 
         $attributes = array('class' => 'eshop-checkout-sroll-table') ;  
          
-        drupal_add_js(drupal_get_path("module", "ringo_eshop")."/js/eshop_checkout.js") ;
+        drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js') ;
         
         $row_text = t('Your Information') ;
         $scoll_to_id = "customer-pane" ;   
