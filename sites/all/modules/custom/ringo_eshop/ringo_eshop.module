@@ -116,7 +116,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     }
     $form['attributes'][1]['#options'] = $card_types;
     // add national offers
-    $summary_text = t('You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
+    $summary_text = t('National Offers: You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
   an estimated monthly bill of "!price € / month"',
       array(
         '!blue_start' => '<span class="blue-color">',
