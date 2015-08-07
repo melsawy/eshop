@@ -109,6 +109,12 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
     $form['attributes'][2]['#options'] = array_diff_key($form['attributes'][2]['#options'], $locked_options);
+    // localize card options
+    $card_types = array();
+    foreach ($form['attributes'][1]['#options'] as $k => $v) {
+        $card_types[$k] = t($v);
+    }
+    $form['attributes'][1]['#options'] = $card_types;
     // add national offers
     $summary_text = t('You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
   an estimated monthly bill of "!price € / month"',
