@@ -408,3 +408,9 @@ ul.language-switcher-locale-url li.active{
 .eshop-manage-simcards-table {
     margin-top: 1em;   
 }
+
+p.internat-bundle-desc span {
+    background-color: #b7b7b7;
+    padding: 3px;
+    margin-right: 3px;
+}

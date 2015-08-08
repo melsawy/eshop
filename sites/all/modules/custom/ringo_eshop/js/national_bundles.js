@@ -76,7 +76,6 @@ function _assign_international_bundle() {
                 jQuery('.internat-bundle-desc').append(html);
             }
             else {
-                html = Drupal.t('International offers: ') + html;
                 jQuery('.internat-bundle-desc').html(html);
             }
             jQuery('#edit-attributes-5').val(jQuery('.internat-bundle-desc').text());

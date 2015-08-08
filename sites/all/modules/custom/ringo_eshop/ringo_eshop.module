@@ -138,7 +138,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $form += _ringo_eshop_build_national_offers();
     $form += _ringo_eshop_build_international_offers();
     $nat_desc = '<div id="national-bundle-details">' . format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
-    $internat_desc = '<div id="international-bundle-details">' . format_string('<p class="internat-bundle-desc"></p>') .'</div>';
+    $internat_desc = '<div id="international-bundle-details">' . format_string('<p class="internat-bundle-desc">!summary</p>', array('!summary' => t('International offers: '))) .'</div>';
     $form['tabs_close'] = array(
       '#markup' => '</div>',
       '#suffix' => $nat_desc . $internat_desc,
