@@ -47,8 +47,6 @@ function ringo_eshop_theme(){
     );
 }
 
-
-
 /**
  * Implementation of hook_uc_checkout_pane()
  */
@@ -121,11 +119,15 @@ function ringo_eshop_uc_cart_item_update($item) {
  * Implements of hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
-  drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
+  if ($form_id == 'uc_cart_checkout_form') {
+      $form['panes']['delivery']['#title'] = t('Shipping Address');
+      $form['#validate'][] = '_ringo_eshop_validate_delivery';
+  }
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
+    drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
+    drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
+    drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
@@ -169,6 +171,16 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+function _ringo_eshop_validate_delivery($form, &$form_state) {
+    // validate delivery mobile number
+    if(!is_numeric($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
+        form_set_error('panes][delivery][address][delivery_phone', t('Shipping mobile number must be numeric value')) ;
+    }
+    // validate billing mobile number
+    if (!$form_state['values']['panes']['billing']['copy_address'] && !is_numeric($form_state['values']['panes']['billing']['address']['billing_phone'])) {
+        form_set_error('panes][billing][address][delivery_phone', t('Billing mobile number must be numeric value')) ;
+    }
+}
 /**
  *Implements of hook_uc_cart_alter().
  */
