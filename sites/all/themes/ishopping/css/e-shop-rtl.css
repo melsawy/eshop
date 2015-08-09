@@ -243,11 +243,58 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 .ui-tabs .ui-tabs-nav li {
     float: right;
 }
-
+input.form-radio,
+.uc-cart-checkout-form #ringo_contact_info-pane.fieldset .form-item, .uc-cart-checkout-form #id_document-pane.fieldset .form-item,
+#uc-cart-view-form .form-actions a,
 .views-field-display-price {
     float: right;
 }
-
+#line-items-div,
 .views-field-addtocartlink {
     float: left;
+}
+.slideshow-pager .views-field-view-node .field-content {
+    float: right;
+    margin-right: 120px;
+}
+#panel-first-wrapper .grid-inner,
+#main-content .region-content .grid .grid-inner {
+   border-right: 1px dotted #cdcdcd;
+}
+.slideshow-pager .views-field-title .field-content,
+.slideshow-pager .views-field-body .field-content {
+    text-align: right;
+    padding-right: 120px;
+}
+.chosen-container-single .chosen-single div {
+    left: 0;
+}
+.uc-cart-checkout-form .address-pane-table tr td,
+caption, th, td,
+.poll .vote-form, .poll .vote-form .choices {
+    text-align: right;
+}
+.horizontal-tabs ul.horizontal-tabs-list li {
+    margin-right: 0px;
+    margin-left: 5px;
+}
+.block .sf-menu.sf-style-ishopping li li a.menuparent {
+    background: rgba(0, 0, 0, 0) url("../images/arrow-7-rtl.png") no-repeat scroll 100% 12px;
+}
+.field-type-taxonomy-term-reference .field-label {
+    float: none;
+}
+.order-review-table .review-button-row td,
+.uc-cart-checkout-form .form-actions,
+#uc-cart-view-form .form-actions,
+td.subtotal {
+    text-align: left;
+}
+.uc-cart-checkout-form .form-item-panes-ringo-contact-info-contact-title, .uc-cart-checkout-form .form-item-contract-file {
+    padding-left: 40%;
+    padding-right: 0%;
+}
+
+.field-label {
+    direction: ltr;
 }
