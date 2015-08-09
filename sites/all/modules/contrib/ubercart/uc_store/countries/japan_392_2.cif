@@ -1,0 +1,158 @@
+<?php
+
+/**
+* First implement hook_install() using the name of the country as the base of
+* the function name.
+*/
+function japan_install() {
+  // Make the entry in the country table.
+  // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 392,
+      'country_name' => 'Japan',
+      'country_iso_code_2' => 'JP',
+      'country_iso_code_3' => 'JPN',
+      'version' => 2,
+    ))
+    ->execute();
+
+  // Make the entries in the zones table.
+  $zones = array(
+    array(392, '01', 'Hokkaido'),
+    array(392, '02', 'Aomori'),
+    array(392, '03', 'Iwate'),
+    array(392, '04', 'Miyagi'),
+    array(392, '05', 'Akita'),
+    array(392, '06', 'Yamagata'),
+    array(392, '07', 'Hukusima'),
+    array(392, '08', 'Ibaraki'),
+    array(392, '09', 'Totigi'),
+    array(392, '10', 'Gunma'),
+    array(392, '11', 'Saitama'),
+    array(392, '12', 'Tiba'),
+    array(392, '13', 'Tokyo'),
+    array(392, '14', 'Kanagawa'),
+    array(392, '15', 'Niigata'),
+    array(392, '16', 'Toyama'),
+    array(392, '17', 'Isikawa'),
+    array(392, '18', 'Hukui'),
+    array(392, '19', 'Yamanasi'),
+    array(392, '20', 'Nagano'),
+    array(392, '21', 'Gifu'),
+    array(392, '22', 'Shizuoka'),
+    array(392, '23', 'Aichi'),
+    array(392, '24', 'Mie'),
+    array(392, '25', 'Shiga'),
+    array(392, '26', 'Kyoto'),
+    array(392, '27', 'Osaka'),
+    array(392, '28', 'Hyogo'),
+    array(392, '29', 'Nara'),
+    array(392, '30', 'Wakayama'),
+    array(392, '31', 'Tottori'),
+    array(392, '32', 'Simane'),
+    array(392, '33', 'Okayama'),
+    array(392, '34', 'Hiroshima'),
+    array(392, '35', 'Yamaguchi'),
+    array(392, '36', 'Tokushima'),
+    array(392, '37', 'Kagawa'),
+    array(392, '38', 'Ehime'),
+    array(392, '39', 'Kochi'),
+    array(392, '40', 'Fukuoka'),
+    array(392, '41', 'Saga'),
+    array(392, '42', 'Nagasaki'),
+    array(392, '43', 'Kumamoto'),
+    array(392, '44', 'Oita'),
+    array(392, '45', 'Miyazaki'),
+    array(392, '46', 'Kagoshima'),
+    array(392, '47', 'Okinawa'),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    392,
+    "!postal_code\r\n".
+    "!zone_name !city\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!company\r\n".
+    "!last_name !first_name\r\n".
+    "!country_name_if"
+  );
+}
+
+function japan_update($version) {
+  switch ($version) {
+    case 2:
+      // Correct ISO-3166-1 country name
+      db_update('uc_countries')
+        ->fields(array('country_name' => 'Japan'))
+        ->condition('country_id', 392)
+        ->execute();
+
+    $zones = array(
+      array(392, '01', 'Hokkaido'),
+      array(392, '02', 'Aomori'),
+      array(392, '03', 'Iwate'),
+      array(392, '04', 'Miyagi'),
+      array(392, '05', 'Akita'),
+      array(392, '06', 'Yamagata'),
+      array(392, '07', 'Hukusima'),
+      array(392, '08', 'Ibaraki'),
+      array(392, '09', 'Totigi'),
+      array(392, '10', 'Gunma'),
+      array(392, '11', 'Saitama'),
+      array(392, '12', 'Tiba'),
+      array(392, '13', 'Tokyo'),
+      array(392, '14', 'Kanagawa'),
+      array(392, '15', 'Niigata'),
+      array(392, '16', 'Toyama'),
+      array(392, '17', 'Isikawa'),
+      array(392, '18', 'Hukui'),
+      array(392, '19', 'Yamanasi'),
+      array(392, '20', 'Nagano'),
+      array(392, '21', 'Gifu'),
+      array(392, '22', 'Shizuoka'),
+      array(392, '23', 'Aichi'),
+      array(392, '24', 'Mie'),
+      array(392, '25', 'Shiga'),
+      array(392, '26', 'Kyoto'),
+      array(392, '27', 'Osaka'),
+      array(392, '28', 'Hyogo'),
+      array(392, '29', 'Nara'),
+      array(392, '30', 'Wakayama'),
+      array(392, '31', 'Tottori'),
+      array(392, '32', 'Simane'),
+      array(392, '33', 'Okayama'),
+      array(392, '34', 'Hiroshima'),
+      array(392, '35', 'Yamaguchi'),
+      array(392, '36', 'Tokushima'),
+      array(392, '37', 'Kagawa'),
+      array(392, '38', 'Ehime'),
+      array(392, '39', 'Kochi'),
+      array(392, '40', 'Fukuoka'),
+      array(392, '41', 'Saga'),
+      array(392, '42', 'Nagasaki'),
+      array(392, '43', 'Kumamoto'),
+      array(392, '44', 'Oita'),
+      array(392, '45', 'Miyazaki'),
+      array(392, '46', 'Kagoshima'),
+      array(392, '47', 'Okinawa'),
+    );
+  
+    foreach ($zones as $zone) {
+      db_update('uc_zones')
+        ->fields(array('zone_name' => $zone[2]))
+        ->condition('zone_country_id', $zone[0])
+        ->condition('zone_code', $zone[1])
+        ->execute();
+    }
+    break;
+  }
+}

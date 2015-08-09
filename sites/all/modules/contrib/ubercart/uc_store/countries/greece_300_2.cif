@@ -1,0 +1,165 @@
+<?php
+
+/**
+* First implement hook_install() using the name of the country as the base of
+* the function name.
+*/
+function greece_install() {
+  // Make the entry in the country table.
+  // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 300,
+      'country_name' => 'Greece',
+      'country_iso_code_2' => 'GR',
+      'country_iso_code_3' => 'GRC',
+      'version' => 2,
+    ))
+    ->execute();
+
+  // Make the entries in the zones table.
+  $zones = array(
+    array(300, 'ATT', 'Attica'),
+    array(300, 'AIT', 'Aitoloakarnanias'),
+    array(300, 'ARG', 'Argolis'),
+    array(300, 'ARK', 'Arcadia'),
+    array(300, 'ART', 'Arts'),
+    array(300, 'AHA', 'Achea'),
+    array(300, 'BOI', 'Viotia'),
+    array(300, 'GRE', 'Grevana'),
+    array(300, 'DRA', 'Drama'),
+    array(300, 'DOD', 'Dodecanese Islands'),
+    array(300, 'EVR', 'Evros'),
+    array(300, 'EVI', 'Evia'),
+    array(300, 'EVT', 'Evrytania'),
+    array(300, 'ZAK', 'Zakinthos'),
+    array(300, 'ILI', 'Ileias'),
+    array(300, 'HMA', 'Imathia'),
+    array(300, 'HRA', 'Heraklion'),
+    array(300, 'THP', 'Thesprotias'),
+    array(300, 'THE', 'Thessalonika'),
+    array(300, 'IOA', 'Ioannina'),
+    array(300, 'KAV', 'Kavala'),
+    array(300, 'KAR', 'Karditsa'),
+    array(300, 'KAS', 'Kastoria'),
+    array(300, 'KER', 'Corfu'),
+    array(300, 'KEF', 'Kerkyra'),
+    array(300, 'KIL', 'Kilkis'),
+    array(300, 'KOZ', 'Kozani'),
+    array(300, 'KOR', 'Corinth'),
+    array(300, 'KYK', 'Cyclades'),
+    array(300, 'LAK', 'Lakonia'),
+    array(300, 'LAR', 'Larisa'),
+    array(300, 'LAS', 'Lasithiou'),
+    array(300, 'LES', 'Evros'),
+    array(300, 'LEF', 'Lefkas'),
+    array(300, 'MAG', 'Magnisias'),
+    array(300, 'ΜES', 'Messinias'),
+    array(300, 'XAN', 'Xanthis'),
+    array(300, 'PEL', 'Pella'),
+    array(300, 'PIE', 'Pieria'),
+    array(300, 'PRE', 'Prevaza'),
+    array(300, 'RET', 'Rethymnou'),
+    array(300, 'ROD', 'Rodopis'),
+    array(300, 'SAM', 'Samos'),
+    array(300, 'SER', 'Serrai'),
+    array(300, 'TRI', 'Trikala'),
+    array(300, 'FTH', 'Phthiotis'),
+    array(300, 'FLO', 'FLorina'),
+    array(300, 'FOK', 'Fokida'),
+    array(300, 'HAL', 'Chalcidice'),
+    array(300, 'HAN', 'Khania'),
+    array(300, 'HIO', 'Chios'),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    300,
+    "!company\r\n".
+    "!first_name !last_name\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!postal_code, !city\r\n".
+    "!country_name_if"
+  );
+}
+
+function greece_update($version) {
+  switch ($version) {
+    case 2:
+      // Correct ISO-3166-1 country name
+      db_update('uc_countries')
+        ->fields(array('country_name' => 'Greece'))
+        ->condition('country_id', 300)
+        ->execute();
+
+    $zones = array(
+      array(300, 'ATT', 'Attica'),
+      array(300, 'AIT', 'Aitoloakarnanias'),
+      array(300, 'ARG', 'Argolis'),
+      array(300, 'ARK', 'Arcadia'),
+      array(300, 'ART', 'Arts'),
+      array(300, 'AHA', 'Achea'),
+      array(300, 'BOI', 'Viotia'),
+      array(300, 'GRE', 'Grevana'),
+      array(300, 'DRA', 'Drama'),
+      array(300, 'DOD', 'Dodecanese Islands'),
+      array(300, 'EVR', 'Evros'),
+      array(300, 'EVI', 'Evia'),
+      array(300, 'EVT', 'Evrytania'),
+      array(300, 'ZAK', 'Zakinthos'),
+      array(300, 'ILI', 'Ileias'),
+      array(300, 'HMA', 'Imathia'),
+      array(300, 'HRA', 'Heraklion'),
+      array(300, 'THP', 'Thesprotias'),
+      array(300, 'THE', 'Thessalonika'),
+      array(300, 'IOA', 'Ioannina'),
+      array(300, 'KAV', 'Kavala'),
+      array(300, 'KAR', 'Karditsa'),
+      array(300, 'KAS', 'Kastoria'),
+      array(300, 'KER', 'Corfu'),
+      array(300, 'KEF', 'Kerkyra'),
+      array(300, 'KIL', 'Kilkis'),
+      array(300, 'KOZ', 'Kozani'),
+      array(300, 'KOR', 'Corinth'),
+      array(300, 'KYK', 'Cyclades'),
+      array(300, 'LAK', 'Lakonia'),
+      array(300, 'LAR', 'Larisa'),
+      array(300, 'LAS', 'Lasithiou'),
+      array(300, 'LES', 'Evros'),
+      array(300, 'LEF', 'Lefkas'),
+      array(300, 'MAG', 'Magnisias'),
+      array(300, 'ΜES', 'Messinias'),
+      array(300, 'XAN', 'Xanthis'),
+      array(300, 'PEL', 'Pella'),
+      array(300, 'PIE', 'Pieria'),
+      array(300, 'PRE', 'Prevaza'),
+      array(300, 'RET', 'Rethymnou'),
+      array(300, 'ROD', 'Rodopis'),
+      array(300, 'SAM', 'Samos'),
+      array(300, 'SER', 'Serrai'),
+      array(300, 'TRI', 'Trikala'),
+      array(300, 'FTH', 'Phthiotis'),
+      array(300, 'FLO', 'FLorina'),
+      array(300, 'FOK', 'Fokida'),
+      array(300, 'HAL', 'Chalcidice'),
+      array(300, 'HAN', 'Khania'),
+      array(300, 'HIO', 'Chios'),
+    );
+  
+    foreach ($zones as $zone) {
+      db_update('uc_zones')
+        ->fields(array('zone_name' => $zone[2]))
+        ->condition('zone_country_id', $zone[0])
+        ->condition('zone_code', $zone[1])
+        ->execute();
+    }
+    break;
+  }
+}

@@ -1,0 +1,73 @@
+<?php
+
+/**
+* First implement hook_install() using the name of the country as the base of
+* the function name.
+*/
+function china_install() {
+  // Make the entry in the country table.
+  // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 156,
+      'country_name' => 'China',
+      'country_iso_code_2' => 'CN',
+      'country_iso_code_3' => 'CHN',
+      'version' => 2,
+    ))
+    ->execute();
+  // VALUES = %d for ID, Parent Country ID, Zone Abbreviation, Zone Name
+  $zones = array(
+    array(156, 'Beijing', 'Beijing'),
+    array(156, 'Shanghai', 'Shanghai'),
+    array(156, 'Tianjin', 'Tianjin'),
+    array(156, 'Chongqing', 'Chongqing'),
+    array(156, 'Hebei', 'Hebei'),
+    array(156, 'Henan', 'Henan'),
+    array(156, 'Hubei', 'Hubei'),
+    array(156, 'Hunan', 'Hunan'),
+    array(156, 'Jiangsu', 'Jiangsu'),
+    array(156, 'Jiangxi', 'Jiangxi'),
+    array(156, 'Liaoning', 'Liaoning'),
+    array(156, 'Jilin', 'Jilin'),
+    array(156, 'Heilongjiang', 'Heilongjiang'),
+    array(156, 'Shaanxi', 'Shaanxi'),
+    array(156, 'Shandong', 'Shandong'),
+    array(156, 'Shanxi', 'Shanxi'),
+    array(156, 'Sichuan', 'Sichuan'),
+    array(156, 'Qinghai', 'Qinghai'),
+    array(156, 'Anhui', 'Anhui'),
+    array(156, 'Hainan', 'Hainan'),
+    array(156, 'Guangdong', 'Guangdong'),
+    array(156, 'Guangxi', 'Guangxi'),
+    array(156, 'Guizhou', 'Guizhou'),
+    array(156, 'Zhejiang', 'Zhejiang'),
+    array(156, 'Fujian', 'Fujian'),
+    array(156, 'Gansu', 'Gansu'),
+    array(156, 'Yunnan', 'Yunnan'),
+    array(156, 'Inner Mongolia', 'Inner Mongolia'),
+    array(156, 'Ningxia', 'Ningxia'),
+    array(156, 'Xinjiang', 'Xinjiang'),
+    array(156, 'Xizang', 'Xizang'),
+    array(156, 'Hong Kong', 'Hong Kong'),
+    array(156, 'Macao', 'Macao'),
+    array(156, 'Taiwan', 'Taiwan'),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    156,
+    "!company\r\n".
+    "!first_name !last_name\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!postal_code !city\r\n".
+    "!country_name_if"
+  );
+}

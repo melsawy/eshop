@@ -1,0 +1,254 @@
+<?php
+
+function russia_install() {
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 643,
+      'country_name' => 'Russian Federation',
+      'country_iso_code_2' => 'RU',
+      'country_iso_code_3' => 'RUS',
+      'version' => 3,
+    ))
+    ->execute();
+
+  // Make the entries in the zones table.
+  $zones = array(
+    array(643, 'AD', "Adygeya, Respublika"),
+    array(643, 'AL', "Altay, Respublika"),
+    array(643, 'ALT', "Altayskiy kray"),
+    array(643, 'AMU', "Amurskaya oblast'"),
+    array(643, 'ARK', "Arkhangel'skaya oblast'"),
+    array(643, 'AST', "Astrakhanskaya oblast'"),
+    array(643, 'BA', "Bashkortostan, Respublika"),
+    array(643, 'BEL', "Belgorodskaya oblast'"),
+    array(643, 'BRY', "Bryanskaya oblast'"),
+    array(643, 'BU', "Buryatiya, Respublika"),
+    array(643, 'CE', "Chechenskaya Respublika"),
+    array(643, 'CHE', "Chelyabinskaya oblast'"),
+    array(643, 'CHU', "Chukotskiy avtonomnyy okrug"),
+    array(643, 'CU', "Chuvashskaya Respublika"),
+    array(643, 'DA', "Dagestan, Respublika"),
+    array(643, 'IN', "Ingushetiya, Respublika"),
+    array(643, 'IRK', "Irkutskaya oblast'"),
+    array(643, 'IVA', "Ivanovskaya oblast'"),
+    array(643, 'KAM', "Kamchatskiy kray"),
+    array(643, 'KB', "Kabardino-Balkarskaya Respublika"),
+    array(643, 'KC', "Karachayevo-Cherkesskaya Respublika"),
+    array(643, 'KDA', "Krasnodarskiy kray"),
+    array(643, 'KEM', "Kemerovskaya oblast'"),
+    array(643, 'KGD', "Kaliningradskaya oblast'"),
+    array(643, 'KGN', "Kurganskaya oblast'"),
+    array(643, 'KHA', "Khabarovskiy kray"),
+    array(643, 'KHM', "Khanty-Mansiyskiy avtonomnyy okrug-Yugra"),
+    array(643, 'KIR', "Kirovskaya oblast'"),
+    array(643, 'KK', "Khakasiya, Respublika"),
+    array(643, 'KL', "Kalmykiya, Respublika"),
+    array(643, 'KLU', "Kaluzhskaya oblast'"),
+    array(643, 'KO', "Komi, Respublika"),
+    array(643, 'KOS', "Kostromskaya oblast'"),
+    array(643, 'KR', "Kareliya, Respublika"),
+    array(643, 'KRS', "Kurskaya oblast'"),
+    array(643, 'KYA', "Krasnoyarskiy kray"),
+    array(643, 'LEN', "Leningradskaya oblast'"),
+    array(643, 'LIP', "Lipetskaya oblast'"),
+    array(643, 'MAG', "Magadanskaya oblast'"),
+    array(643, 'ME', "Mariy El, Respublika"),
+    array(643, 'MO', "Mordoviya, Respublika"),
+    array(643, 'MOS', "Moskovskaya oblast'"),
+    array(643, 'MOW', "Moskva"),
+    array(643, 'MUR', "Murmanskaya oblast'"),
+    array(643, 'NEN', "Nenetskiy avtonomnyy okrug"),
+    array(643, 'NGR', "Novgorodskaya oblast'"),
+    array(643, 'NIZ', "Nizhegorodskaya oblast'"),
+    array(643, 'NVS', "Novosibirskaya oblast'"),
+    array(643, 'OMS', "Omskaya oblast'"),
+    array(643, 'ORE', "Orenburgskaya oblast'"),
+    array(643, 'ORL', "Orlovskaya oblast'"),
+    array(643, 'PER', "Permskiy kray"),
+    array(643, 'PNZ', "Penzenskaya oblast'"),
+    array(643, 'PRI', "Primorskiy kray"),
+    array(643, 'PSK', "Pskovskaya oblast'"),
+    array(643, 'ROS', "Rostovskaya oblast'"),
+    array(643, 'RYA', "Ryazanskaya oblast'"),
+    array(643, 'SA', "Sakha, Respublika"),
+    array(643, 'SAK', "Sakhalinskaya oblast'"),
+    array(643, 'SAM', "Samarskaya oblast'"),
+    array(643, 'SAR', "Saratovskaya oblast'"),
+    array(643, 'SE', "Severnaya Osetiya-Alaniya, Respublika"),
+    array(643, 'SMO', "Smolenskaya oblast'"),
+    array(643, 'SPE', "Sankt-Peterburg"),
+    array(643, 'STA', "Stavropol'skiy kray"),
+    array(643, 'SVE', "Sverdlovskaya oblast'"),
+    array(643, 'TA', "Tatarstan, Respublika"),
+    array(643, 'TAM', "Tambovskaya oblast'"),
+    array(643, 'TOM', "Tomskaya oblast'"),
+    array(643, 'TUL', "Tul'skaya oblast'"),
+    array(643, 'TVE', "Tverskaya oblast'"),
+    array(643, 'TY', "Tyva, Respublika"),
+    array(643, 'TYU', "Tyumenskaya oblast'"),
+    array(643, 'UD', "Udmurtskaya Respublika"),
+    array(643, 'ULY', "Ul'yanovskaya oblast'"),
+    array(643, 'VGG', "Volgogradskaya oblast'"),
+    array(643, 'VLA', "Vladimirskaya oblast'"),
+    array(643, 'VLG', "Vologodskaya oblast'"),
+    array(643, 'VOR', "Voronezhskaya oblast'"),
+    array(643, 'YAN', "Yamalo-Nenetskiy avtonomnyy okrug"),
+    array(643, 'YAR', "Yaroslavskaya oblast'"),
+    array(643, 'YEV', "Yevreyskaya avtonomnaya oblast'"),
+    array(643, 'ZAB', "Zabaykal'skiy kray"),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    643,
+    "!company\r\n".
+    "!first_name !last_name\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!postal_code !city\r\n".
+    "!country_name_if"
+  );
+}
+
+function russia_update($version) {
+  switch ($version) {
+    case 3:
+      // Correct ISO-3166-1 country name
+      db_update('uc_countries')
+        ->fields(array('country_name' => 'Russian Federation'))
+        ->condition('country_id', 643)
+        ->execute();
+
+      // Remove old obsolete zones
+      db_delete('uc_zones')
+        ->condition(db_and()
+          ->condition('zone_country_id', 643)
+          ->condition('zone_code', 'AGB'))
+        ->execute();
+      db_delete('uc_zones')
+        ->condition(db_and()
+          ->condition('zone_country_id', 643)
+          ->condition('zone_code', 'CHI'))
+        ->execute();
+      db_delete('uc_zones')
+        ->condition(db_and()
+          ->condition('zone_country_id', 643)
+          ->condition('zone_code', 'KOR'))
+        ->execute();
+      db_delete('uc_zones')
+        ->condition(db_and()
+          ->condition('zone_country_id', 643)
+          ->condition('zone_code', 'UOB'))
+        ->execute();
+        
+  // Update the entries in the zones table.
+    $zones = array(
+      array(643, 'AD', "Adygeya, Respublika"),
+      array(643, 'AL', "Altay, Respublika"),
+      array(643, 'ALT', "Altayskiy kray"),
+      array(643, 'AMU', "Amurskaya oblast'"),
+      array(643, 'ARK', "Arkhangel'skaya oblast'"),
+      array(643, 'AST', "Astrakhanskaya oblast'"),
+      array(643, 'BA', "Bashkortostan, Respublika"),
+      array(643, 'BEL', "Belgorodskaya oblast'"),
+      array(643, 'BRY', "Bryanskaya oblast'"),
+      array(643, 'BU', "Buryatiya, Respublika"),
+      array(643, 'CE', "Chechenskaya Respublika"),
+      array(643, 'CHE', "Chelyabinskaya oblast'"),
+      array(643, 'CHU', "Chukotskiy avtonomnyy okrug"),
+      array(643, 'CU', "Chuvashskaya Respublika"),
+      array(643, 'DA', "Dagestan, Respublika"),
+      array(643, 'IN', "Ingushetiya, Respublika"),
+      array(643, 'IRK', "Irkutskaya oblast'"),
+      array(643, 'IVA', "Ivanovskaya oblast'"),
+      array(643, 'KAM', "Kamchatskiy kray"),
+      array(643, 'KB', "Kabardino-Balkarskaya Respublika"),
+      array(643, 'KC', "Karachayevo-Cherkesskaya Respublika"),
+      array(643, 'KDA', "Krasnodarskiy kray"),
+      array(643, 'KEM', "Kemerovskaya oblast'"),
+      array(643, 'KGD', "Kaliningradskaya oblast'"),
+      array(643, 'KGN', "Kurganskaya oblast'"),
+      array(643, 'KHA', "Khabarovskiy kray"),
+      array(643, 'KHM', "Khanty-Mansiyskiy avtonomnyy okrug-Yugra"),
+      array(643, 'KIR', "Kirovskaya oblast'"),
+      array(643, 'KK', "Khakasiya, Respublika"),
+      array(643, 'KL', "Kalmykiya, Respublika"),
+      array(643, 'KLU', "Kaluzhskaya oblast'"),
+      array(643, 'KO', "Komi, Respublika"),
+      array(643, 'KOS', "Kostromskaya oblast'"),
+      array(643, 'KR', "Kareliya, Respublika"),
+      array(643, 'KRS', "Kurskaya oblast'"),
+      array(643, 'LEN', "Leningradskaya oblast'"),
+      array(643, 'LIP', "Lipetskaya oblast'"),
+      array(643, 'MAG', "Magadanskaya oblast'"),
+      array(643, 'ME', "Mariy El, Respublika"),
+      array(643, 'MO', "Mordoviya, Respublika"),
+      array(643, 'MOS', "Moskovskaya oblast'"),
+      array(643, 'MOW', "Moskva"),
+      array(643, 'MUR', "Murmanskaya oblast'"),
+      array(643, 'NEN', "Nenetskiy avtonomnyy okrug"),
+      array(643, 'NGR', "Novgorodskaya oblast'"),
+      array(643, 'NIZ', "Nizhegorodskaya oblast'"),
+      array(643, 'NVS', "Novosibirskaya oblast'"),
+      array(643, 'OMS', "Omskaya oblast'"),
+      array(643, 'ORE', "Orenburgskaya oblast'"),
+      array(643, 'ORL', "Orlovskaya oblast'"),
+      array(643, 'PER', "Permskiy kray"),
+      array(643, 'PNZ', "Penzenskaya oblast'"),
+      array(643, 'PRI', "Primorskiy kray"),
+      array(643, 'PSK', "Pskovskaya oblast'"),
+      array(643, 'ROS', "Rostovskaya oblast'"),
+      array(643, 'RYA', "Ryazanskaya oblast'"),
+      array(643, 'SA', "Sakha, Respublika"),
+      array(643, 'SAK', "Sakhalinskaya oblast'"),
+      array(643, 'SAM', "Samarskaya oblast'"),
+      array(643, 'SAR', "Saratovskaya oblast'"),
+      array(643, 'SE', "Severnaya Osetiya-Alaniya, Respublika"),
+      array(643, 'SMO', "Smolenskaya oblast'"),
+      array(643, 'SPE', "Sankt-Peterburg"),
+      array(643, 'STA', "Stavropol'skiy kray"),
+      array(643, 'SVE', "Sverdlovskaya oblast'"),
+      array(643, 'TA', "Tatarstan, Respublika"),
+      array(643, 'TAM', "Tambovskaya oblast'"),
+      array(643, 'TOM', "Tomskaya oblast'"),
+      array(643, 'TUL', "Tul'skaya oblast'"),
+      array(643, 'TVE', "Tverskaya oblast'"),
+      array(643, 'TY', "Tyva, Respublika"),
+      array(643, 'TYU', "Tyumenskaya oblast'"),
+      array(643, 'UD', "Udmurtskaya Respublika"),
+      array(643, 'ULY', "Ul'yanovskaya oblast'"),
+      array(643, 'VGG', "Volgogradskaya oblast'"),
+      array(643, 'VLA', "Vladimirskaya oblast'"),
+      array(643, 'VLG', "Vologodskaya oblast'"),
+      array(643, 'VOR', "Voronezhskaya oblast'"),
+      array(643, 'YAN', "Yamalo-Nenetskiy avtonomnyy okrug"),
+      array(643, 'YAR', "Yaroslavskaya oblast'"),
+      array(643, 'YEV', "Yevreyskaya avtonomnaya oblast'"),
+      array(643, 'ZAB', "Zabaykal'skiy kray"),
+    );
+  
+    foreach ($zones as $zone) {
+      db_update('uc_zones')
+        ->fields(array('zone_name' => $zone[2]))
+        ->condition('zone_country_id', $zone[0])
+        ->condition('zone_code', $zone[1])
+        ->execute();
+    }
+    
+    // Update zone_code and zone_name for Krasnoyarskiy kray
+    $zones = array(643, 'KYA', "Krasnoyarskiy kray");
+        
+    db_update('uc_zones')
+      ->fields(array('zone_name' => $zones[2], 'zone_code' => $zones[1]))
+      ->condition('zone_country_id', 643)
+      ->condition('zone_code', 'KIA')
+      ->execute();
+    break;
+  }
+}

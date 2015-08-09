@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * First implement hook_install() using the name of the country as the base of
+ * the function name.
+ */
+function egypt_install() {
+  // Make the entry in the country table.
+  // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 818,
+      'country_name' => 'Egypt',
+      'country_iso_code_2' => 'EG',
+      'country_iso_code_3' => 'EGY',
+      'version' => 2,
+    ))
+    ->execute();
+
+  // Make the entries in the zones table.
+  $zones = array(
+    array(818, 'MUH', 'Matrouh'),
+    array(818, 'ALX', 'Alexandria'),
+    array(818, 'WAD', 'New Valley'),
+    array(818, 'GZ', 'Giza'),
+    array(818, 'FYM', 'Faiyum'),
+    array(818, 'BNS', 'Beni Suef'),
+    array(818, 'MN', 'Elminia'),
+    array(818, 'AST', 'Asuot'),
+    array(818, 'SHG', 'Sohag'),
+    array(818, 'ASN', 'Aswan'),
+    array(818, 'SIN', 'North Sinai'),
+    array(818, 'JS', 'South Sinai'),
+    array(818, 'MNF', 'Menufia'),
+    array(818, 'BA', 'Red Sea'),
+    array(818, 'SHR', 'Sharkeya'),
+    array(818, 'KB', 'Qalyubia'),
+    array(818, 'IS', 'Ismailia'),
+    array(818, 'SUZ', 'Suez'),
+    array(818, 'BH', 'Beheira'),
+    array(818, 'GH', 'Gharbia'),
+    array(818, 'KFS', 'Kafr El-Shaikh'),
+    array(818, 'DK', 'Daqahlia'),
+    array(818, 'UQ', 'Luxor'),
+    array(818, 'PTS', 'Port Said'),
+    array(818, 'DT', 'Damietta'),
+    array(818, 'KN', 'Qena'),
+    array(818, 'CAI', 'Cairo'),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    818,
+    "!company\r\n".
+    "!first_name !last_name\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!city !zone_code !postal_code\r\n".
+    "!country_name_if"
+  );
+}
+
+function egypt_update($version) {
+  switch ($version) {
+    case 2:
+      // Correct ISO-3166-1 country name
+      db_update('uc_countries')
+        ->fields(array('country_name' => 'Egypt'))
+        ->condition('country_id', 818)
+        ->execute();
+
+    $zones = array(
+      array(818, 'MUH', 'Matrouh'),
+      array(818, 'ALX', 'Alexandria'),
+      array(818, 'WAD', 'New Valley'),
+      array(818, 'GZ', 'Giza'),
+      array(818, 'FYM', 'Faiyum'),
+      array(818, 'BNS', 'Beni Suef'),
+      array(818, 'MN', 'Elminia'),
+      array(818, 'AST', 'Asuot'),
+      array(818, 'SHG', 'Sohag'),
+      array(818, 'ASN', 'Aswan'),
+      array(818, 'SIN', 'North Sinai'),
+      array(818, 'JS', 'South Sinai'),
+      array(818, 'MNF', 'Menufia'),
+      array(818, 'BA', 'Red Sea'),
+      array(818, 'SHR', 'Sharkeya'),
+      array(818, 'KB', 'Qalyubia'),
+      array(818, 'IS', 'Ismailia'),
+      array(818, 'SUZ', 'Suez'),
+      array(818, 'BH', 'Beheira'),
+      array(818, 'GH', 'Gharbia'),
+      array(818, 'KFS', 'Kafr El-Shaikh'),
+      array(818, 'DK', 'Daqahlia'),
+      array(818, 'UQ', 'Luxor'),
+      array(818, 'PTS', 'Port Said'),
+      array(818, 'DT', 'Damietta'),
+      array(818, 'KN', 'Qena'),
+      array(818, 'CAI', 'Cairo'),
+    );
+  
+    foreach ($zones as $zone) {
+      db_update('uc_zones')
+        ->fields(array('zone_name' => $zone[2]))
+        ->condition('zone_country_id', $zone[0])
+        ->condition('zone_code', $zone[1])
+        ->execute();
+    }
+    break;
+  }
+}

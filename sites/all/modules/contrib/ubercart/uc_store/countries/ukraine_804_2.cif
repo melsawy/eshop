@@ -1,0 +1,109 @@
+<?php
+
+function ukraine_install() {
+  // Make the entry in the country table.
+  // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
+  db_insert('uc_countries')
+    ->fields(array(
+      'country_id' => 804,
+      'country_name' => 'Ukraine',
+      'country_iso_code_2' => 'UA',
+      'country_iso_code_3' => 'UKR',
+      'version' => 2,
+    ))
+    ->execute();
+
+  // Make the entries in the zones table.
+  $zones = array(
+    array(804, 'VN', "Vinnyts'ka Oblast'"),
+    array(804, 'LT', "Volyns'ka Oblast'"),
+    array(804, 'DP', "Dnipropetrovs'ka Oblast'"),
+    array(804, 'DN', "Donets'ka Oblast'"),
+    array(804, 'ZT', "Zhytomyrs'ka Oblast'"),
+    array(804, 'UZ', "Zakarpats'ka Oblast'"),
+    array(804, 'ZP', "Zaporiz'ka Oblast'"),
+    array(804, 'IF', "Ivano-Frankivs'ka Oblast'"),
+    array(804, 'KV', "Kyïvs'ka Oblast'"),
+    array(804, 'KR', "Kirovohrads'ka Oblast'"),
+    array(804, 'LG', "Luhans'ka Oblast'"),
+    array(804, 'LV', "L'vivs'ka Oblast'"),
+    array(804, 'MK', "Mykolaïvs'ka Oblast'"),
+    array(804, 'OD', "Odes'ka Oblast'"),
+    array(804, 'PL', "Poltavs'ka Oblast'"),
+    array(804, 'RV', "Rivnens'ka Oblast'"),
+    array(804, 'SM', "Sums'ka Oblast'"),
+    array(804, 'TE', "Ternopil's'ka Oblast'"),
+    array(804, 'KH', "Kharkivs'ka Oblast'"),
+    array(804, 'KS', "Khersons'ka Oblast'"),
+    array(804, 'KM', "Khmel'nyts'ka Oblast'"),
+    array(804, 'CK', "Cherkas'ka Oblast'"),
+    array(804, 'CN', "Chernihivs'ka Oblast'"),
+    array(804, 'CV', "Chernivets'ka Oblast'"),
+  );
+
+  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  foreach ($zones as $zone) {
+    $query->values($zone);
+  }
+  $query->execute();
+
+  // Set address format
+  uc_set_address_format(
+    804,
+    "!country_name\r\n".
+    "!zone_name\r\n".
+    "!city\r\n".
+    "!postal_code\r\n".
+    "!street1\r\n".
+    "!street2\r\n".
+    "!company\r\n".
+    "!first_name !last_name"
+  );
+}
+
+function ukraine_update($version) {
+  switch ($version) {
+    case 2:
+      // Correct ISO-3166-1 country name
+      db_update('uc_countries')
+        ->fields(array('country_name' => 'Ukraine'))
+        ->condition('country_id', 804)
+        ->execute();
+
+    $zones = array(
+      array(804, 'VN', "Vinnyts'ka Oblast'"),
+      array(804, 'LT', "Volyns'ka Oblast'"),
+      array(804, 'DP', "Dnipropetrovs'ka Oblast'"),
+      array(804, 'DN', "Donets'ka Oblast'"),
+      array(804, 'ZT', "Zhytomyrs'ka Oblast'"),
+      array(804, 'UZ', "Zakarpats'ka Oblast'"),
+      array(804, 'ZP', "Zaporiz'ka Oblast'"),
+      array(804, 'IF', "Ivano-Frankivs'ka Oblast'"),
+      array(804, 'KV', "Kyïvs'ka Oblast'"),
+      array(804, 'KR', "Kirovohrads'ka Oblast'"),
+      array(804, 'LG', "Luhans'ka Oblast'"),
+      array(804, 'LV', "L'vivs'ka Oblast'"),
+      array(804, 'MK', "Mykolaïvs'ka Oblast'"),
+      array(804, 'OD', "Odes'ka Oblast'"),
+      array(804, 'PL', "Poltavs'ka Oblast'"),
+      array(804, 'RV', "Rivnens'ka Oblast'"),
+      array(804, 'SM', "Sums'ka Oblast'"),
+      array(804, 'TE', "Ternopil's'ka Oblast'"),
+      array(804, 'KH', "Kharkivs'ka Oblast'"),
+      array(804, 'KS', "Khersons'ka Oblast'"),
+      array(804, 'KM', "Khmel'nyts'ka Oblast'"),
+      array(804, 'CK', "Cherkas'ka Oblast'"),
+      array(804, 'CN', "Chernihivs'ka Oblast'"),
+      array(804, 'CV', "Chernivets'ka Oblast'"),
+    );
+  
+    foreach ($zones as $zone) {
+      db_update('uc_zones')
+        ->fields(array('zone_name' => $zone[2]))
+        ->condition('zone_country_id', $zone[0])
+        ->condition('zone_code', $zone[1])
+        ->execute();
+    }
+    break;
+  }
+}
