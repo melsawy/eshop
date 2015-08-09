@@ -83,7 +83,9 @@ function ringo_eshop_uc_checkout_pane() {
    return $panes;
 }
 
-
+/**
+ * Implements of hook_uc_add_to_cart().
+ */
 function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($nid == $sim_id) {
@@ -99,6 +101,25 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
   }
 }
 
+/**
+ * Implements of hook_uc_cart_item_update().
+ */
+function ringo_eshop_uc_cart_item_update($item) {
+    $sim_id = variable_get('ringo_eshop_sim_id', 30);
+    if ($item->nid == $sim_id && $item->qty > 1) {
+      db_update('uc_cart_products')
+              ->fields(array('qty' => 1, 'changed' => time()))
+              ->condition('cart_id', uc_cart_get_id())
+              ->condition('nid', $item->nid)
+              ->condition('data', serialize($item->data))
+              ->execute();
+      drupal_set_message(t('You may only add 1 !item to your cart. Quantity has been restricted.', array('!item' => $item->title)), 'warning');
+    }
+}
+
+/**
+ * Implements of hook_form_alter().
+ */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
