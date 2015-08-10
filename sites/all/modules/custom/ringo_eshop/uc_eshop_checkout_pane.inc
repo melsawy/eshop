@@ -238,7 +238,7 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
         '#date_format' => 'm/d/Y',
         '#date_label_position' => 'within',
         '#date_increment' => 15,
-        '#date_year_range' => '0:+8',
+        '#date_year_range' => '-100:+0',
         '#default_value' => $contact_birth_date_value,
       );
       $contents['contact_gender'] = array(
