@@ -55,11 +55,12 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         return FALSE;
       }
       // Validate that id_number field is a number
+      /*
       if(!ctype_digit($form_state['values']['panes']['id_document']['id_number'])) {
         form_set_error('panes][id_document][id_number', t('You must enter a valid ID number.'));
         return FALSE;          
       }
-      
+      */
       // id_card File Upload Validation
       _eshop_upload_files('id_card_image', $order, 'id_expiry_date_fid');
 
@@ -292,10 +293,12 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       //$order->data['country_birth'] = $form_state['values']['panes']['ringo_contact_info']['country_birth'];
 
       // Validate that tax code field is a number
+      /*
       if(!ctype_digit($form_state['values']['panes']['ringo_contact_info']['tax_code'])) {
         form_set_error('panes][ringo_contact_info][tax_code', t('You must enter a valid Tax code number.'));
         return FALSE;          
       }
+       */
       _eshop_upload_files('contract_file', $order, 'contract_date_fid');
 
       return TRUE;
