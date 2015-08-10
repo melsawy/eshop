@@ -393,7 +393,14 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
     );
 
     $options = array();
-    $row['data'][] = array('data' => t($type), 'class' => array('package'));
+    $type_sign = ''; 
+    if (strtolower($type) == 'voice') {
+        $type_sign = t(' (Minutes)');
+    }
+    elseif (strtolower($type) == 'data') {
+        $type_sign = t(' (GB)');
+    }
+    $row['data'][] = array('data' => t("$type !type", array('!type' => $type_sign)) , 'class' => array('package'));
     $row['data'][] = array(
       'data' => format_string('<span class="size">!quantity</span>', array('!quantity' => 0)) . '<br />'
         . format_string('!currency <span class="price">!price</span>', array('!currency' => t('€'), '!price' => 0)),
