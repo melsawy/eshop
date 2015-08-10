@@ -88,6 +88,32 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($nid == $sim_id) {
     global $user;
+    $user_profile = user_load($user->uid);
+    $restrict_qty = variable_get('ringo_eshop_sim_restrict_qty', 4);
+    // load current mobiles 
+    if (isset($user_profile->field_tax_code[LANGUAGE_NONE][0]['value'])) {
+        $all_mobiles = ringo_api_get_all_mobile_numbers($user_profile->field_tax_code[LANGUAGE_NONE][0]['value']);
+        if (count($all_mobiles)) {
+            $restrict_qty -= count($all_mobiles);
+        }
+    }
+    // get SIM count in shipping cart
+    $sim_count = 0;
+    foreach (uc_cart_get_contents() as $item) {
+        if ($item->nid == $sim_id) {
+            $sim_count++;
+        }
+    }
+    if ($sim_count >= $restrict_qty) {
+         $message = format_plural($restrict_qty, 'Sorry, you may only have 1 item in your cart. You must checkout or remove the item in your cart before adding a different item.',
+        'Sorry, you may only have a total of @count items in your cart.  You must checkout or remove items from your cart before adding others.');
+        $result[] = array(
+            'success' => FALSE,
+            'message' => $message,
+        );
+      return $result;
+    }
+    // log number in custom table to track this number
     $oid = $data['attributes'][2];
     db_insert('ringo_eshop_numbers')
       ->fields(array(

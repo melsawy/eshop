@@ -7,7 +7,6 @@ dependencies[] = date
 dependencies[] = date_api
 dependencies[] = date_popup
 dependencies[] = statistics
-dependencies[] = uc_restrict_qty
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
