@@ -414,3 +414,6 @@ p.internat-bundle-desc span {
     padding: 3px;
     margin-right: 3px;
 }
+.galleryformatter-greenarrows .gallery-thumbs li img {
+    height: 40px !important;
+}
