@@ -243,12 +243,16 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 .ui-tabs .ui-tabs-nav li {
     float: right;
 }
+
+.hot-products-view .views-field-uc-product-image,
 input.form-radio,
 .uc-cart-checkout-form #ringo_contact_info-pane.fieldset .form-item, .uc-cart-checkout-form #id_document-pane.fieldset .form-item,
 #uc-cart-view-form .form-actions a,
 .views-field-display-price {
     float: right;
 }
+.views-exposed-form .views-exposed-widget,
+.node-content .display-price,
 #line-items-div,
 .views-field-addtocartlink {
     float: left;
@@ -267,6 +271,7 @@ input.form-radio,
     padding-right: 120px;
 }
 .chosen-container-single .chosen-single div {
+    right: auto;
     left: 0;
 }
 .uc-cart-checkout-form .address-pane-table tr td,
@@ -283,6 +288,7 @@ caption, th, td,
 }
 .field-type-taxonomy-term-reference .field-label {
     float: none;
+    direction: rtl;
 }
 .order-review-table .review-button-row td,
 .uc-cart-checkout-form .form-actions,
@@ -296,5 +302,11 @@ td.subtotal {
 }
 
 .field-label {
-    direction: ltr;
+    text-align: right;
+}
+.cart-block-arrow {
+    right: 165px;
+}
+.order-review-table .review-button-row td, .uc-cart-checkout-form .form-actions, #uc-cart-view-form .form-actions, td.subtotal{
+    direction: rtl;
 }
