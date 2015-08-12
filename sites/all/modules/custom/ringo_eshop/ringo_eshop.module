@@ -185,6 +185,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   }
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
+    $form['attributes'][5]['#type'] = 'textarea';
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
