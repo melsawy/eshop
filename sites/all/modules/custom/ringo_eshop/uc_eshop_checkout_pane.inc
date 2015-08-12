@@ -39,7 +39,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#title' => t('Image'),
         '#name' => 'id_card_image',
         '#required' => !empty($order->data['id_expiry_date_fid']) ? false  : true ,
-        '#value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : t('n/a') , 
+        '#default_value' => !empty($order->data['id_expiry_date_fid']) ? $order->data['id_expiry_date_fid'] : '' , 
         '#description' => t('Upload ID card & Tax code'),
       );
       return array('description' => '', 'contents' => $contents);
