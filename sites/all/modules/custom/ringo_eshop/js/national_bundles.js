@@ -1,28 +1,24 @@
-(function ($) {
+jQuery(document).ready(function () {
     // All your code here
-    Drupal.behaviors.eshop_card = {
-        attach: function (context) {
-            //adjust elements for natinal bundles
-            jQuery('#tabs').tabs();
-            jQuery('div.attribute-4, div.attribute-5').hide();
-            jQuery('table.nat-bundle td:not(.package, .disabled)').click(function () {
-                jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
+    //adjust elements for natinal bundles
+    jQuery('#tabs').tabs();
+    jQuery('div.attribute-4, div.attribute-5').hide();
+    jQuery('table.nat-bundle td:not(.package, .disabled)').click(function () {
+        jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
 
-                var package_id = jQuery(this).attr('package-id');
-                var group = jQuery(this).parent().attr('group');
+        var package_id = jQuery(this).attr('package-id');
+        var group = jQuery(this).parent().attr('group');
 
-                if (jQuery(this).hasClass('selected-cell')) {
-                    jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', true);
-                }
-                else {
-                    jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', false);
-                }
-                updateSummary();
-            });
+        if (jQuery(this).hasClass('selected-cell')) {
+            jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', true);
         }
-    }
+        else {
+            jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', false);
+        }
+        updateSummary();
+    });
     updateSummary();
-})(jQuery);
+});
 
 
 
