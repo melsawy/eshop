@@ -151,6 +151,27 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'uc_cart_checkout_form') {
       $form['panes']['delivery']['#title'] = t('Shipping Address');
       $form['#validate'][] = '_ringo_eshop_validate_delivery';
+      $form['panes']['payment']['term_condition'] = array(
+          '#prefix' => '<div class="form-inline conditions-and-submit">',
+          '#type' => 'checkbox',
+          '#title' => t(
+          'Accept !terms_and_conditions and !privacy_policy',
+          array(
+            '!privacy_policy' => l(
+            t('Privacy Policy'),
+            variable_get('ringo_privacy_link', '<front>'),
+            array('attributes' => array('target' => '_blank'))
+            ),
+            '!terms_and_conditions' => l(
+            t('Terms and Conditions'),
+            variable_get('ringo_terms_and_conditions', '<front>'),
+            array('attributes' => array('target' => '_blank'))
+            ),
+        )   
+      ),  
+    '#required' => TRUE,
+  ); 
+      
   }
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
