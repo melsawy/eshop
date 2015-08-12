@@ -31,7 +31,7 @@ function ringo_eshop_id_document_pane_checkout($op, &$order, $form = NULL, &$for
         '#date_format' => 'd/m/Y',
         '#date_label_position' => 'within',
         '#date_increment' => 15,
-        '#date_year_range' => '0:+8',
+        '#date_year_range' => '0:+20',
         '#default_value' => !empty($order->data['id_expiry_date']) ? $order->data['id_expiry_date'] : t('n/a'),  
       );
       $contents['id_card_image'] = array(
