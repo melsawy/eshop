@@ -202,6 +202,12 @@ function ringo_eshop_contact_info_pane_checkout($op, &$order, $form = NULL, &$fo
       * End of : Load Fields Default Value
       */      
       $file_uri = file_create_url('public://contract_file/request_to_activate_SIM_card.pdf');
+      if (variable_get('contract_file_node', 0)) {
+          $contract_file_node = node_load(variable_get('contract_file_node', 0));
+          if (isset($contract_file_node->field_file[LANGUAGE_NONE][0]['uri'])) {
+              $file_uri = file_create_url($contract_file_node->field_file[LANGUAGE_NONE][0]['uri']);
+          }
+      }
       $download_link =  l(t('contract'), $file_uri, array('attributes' => array('target'=>'_blank')));
       $contents['download_link'] = array(
         '#markup' => "<div class='contact-info-download-link-wrapper'>".t('Download Contract and sign it !link', array('!link' => $download_link))."</div>",
