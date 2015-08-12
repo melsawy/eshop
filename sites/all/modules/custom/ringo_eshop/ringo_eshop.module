@@ -30,6 +30,16 @@ function ringo_eshop_menu() {
     'file' => 'manage_simcards.inc',
     'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
   );        
+  $items['admin/config/system/eshop'] = array(
+    'title' => 'eshop',
+    'description' => 'Manage general eshop configuration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_ringo_eshop_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ringo_eshop.admin.inc',
+    'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
+  );
+
   return $items;
 }
 
