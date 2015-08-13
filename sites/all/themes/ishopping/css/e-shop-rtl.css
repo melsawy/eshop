@@ -105,6 +105,9 @@ ul.action-links li a:hover{
     background-color: #202020;
 	
 }
+.horizontal-tabs ul.horizontal-tabs-list li {
+    float: right;
+}
 .horizontal-tabs ul.horizontal-tabs-list li a{
     background-color: #5D2A75;
     border-color:#CDCDCD;
@@ -309,4 +312,7 @@ td.subtotal {
 }
 .order-review-table .review-button-row td, .uc-cart-checkout-form .form-actions, #uc-cart-view-form .form-actions, td.subtotal{
     direction: rtl;
+}
+#search-form .form-item-keys input.form-text {
+    margin-left: 5px;
 }

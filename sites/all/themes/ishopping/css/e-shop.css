@@ -227,7 +227,7 @@ table.nat-bundle tr th {
 
 .uc-cart-checkout-form  .form-item input.form-file{
     padding: 8px;
-    width: 80%;    
+    width: 60%;    
 }
 .uc-cart-checkout-form  .form-item .description {
     display: none; 
@@ -418,3 +418,11 @@ p.internat-bundle-desc span {
 .galleryformatter-greenarrows .gallery-thumbs li img {
     height: 40px !important;
 }
+
+.uc-cart-checkout-form div#webform-client-form-80 .form-item {
+    float: left;
+    width: 49%;
+}
+.webform-container-inline.webform-datepicker div {
+    width: 26% !important;
+} 
