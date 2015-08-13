@@ -427,6 +427,6 @@ p.internat-bundle-desc span {
 .webform-container-inline.webform-datepicker div {
     width: 26% !important;
 } 
-#webform-component-panes--webform-nid81--0--title {
-    float: none;
+div#webform-component-panes--webform-nid81--0--title {
+    float: none !important;
 }
