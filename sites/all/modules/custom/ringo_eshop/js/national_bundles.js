@@ -78,3 +78,16 @@ function _assign_international_bundle() {
         }
     });
 }
+
+function _sim_item_add_to_cart() {
+    if (jQuery('#edit-attributes-2').val()) {
+        jQuery('#uc-product-add-to-cart-form-30').submit();
+    }
+    else {
+        jQuery('#edit_attributes_2_chosen, #edit-attributes-2').addClass('error');
+        jQuery('html, body').animate({
+            scrollTop: parseInt(jQuery("#edit_attributes_2_chosen").offset().top - 300)
+        }, 1500);
+        alert(Drupal.t('Number field is required.'));
+    }
+}
