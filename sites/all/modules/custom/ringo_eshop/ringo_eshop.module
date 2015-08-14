@@ -101,7 +101,7 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
     $user_profile = user_load($user->uid);
     $restrict_qty = variable_get('ringo_eshop_sim_restrict_qty', 4);
     // load current mobiles 
-    if (isset($user_profile->field_tax_code[LANGUAGE_NONE][0]['value'])) {
+    if (FALSE && isset($user_profile->field_tax_code[LANGUAGE_NONE][0]['value'])) {
         $all_mobiles = ringo_api_get_all_mobile_numbers($user_profile->field_tax_code[LANGUAGE_NONE][0]['value']);
         if (count($all_mobiles)) {
             $restrict_qty -= count($all_mobiles);
@@ -231,6 +231,65 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     // Submit form via JS to do validation through client side.
     $form['actions']['submit']['#attributes']['onclick'] = 'javascript: _sim_item_add_to_cart();return false;';
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function ringo_eshop_form_webform_client_form_80_alter(&$form, &$form_state, $form_id) {
+    $fields = array(
+        'field_type' => 'type',
+        'field_id_number' => 'number',
+        'field_expiry_date' => array('name' => 'expiry_date', 'type' => 'date'),
+        );
+    _eshop_checkout_set_default_values($form, $fields);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function ringo_eshop_form_webform_client_form_81_alter(&$form, &$form_state, $form_id) {
+    $fields = array(
+        'field_customer_title' => 'title', 'field_first_name' => 'first_name', 
+        'field_last_name' => 'last_name', 'field_tax_code' => 'tax_code', 
+        'field_gender' => 'gender', 'field_province_of_birth' => 'province_of_birth', 
+        'field_city_of_birth' => 'city_of_birth',
+        'field_country_of_birth' => array('name' => 'country_of_birth', 'type' => 'country'),
+        'field_date_of_birth' => array('name' => 'date_of_birth', 'type' => 'date'),
+        );
+    _eshop_checkout_set_default_values($form, $fields);
+}
+/**
+ * 
+ */
+function _eshop_checkout_set_default_values(&$form, $fields) {
+    global $user;
+    $user_profile = user_load($user->uid);
+    foreach ($fields as $key => $field) {
+        if (!is_array($field)) {
+            $field = array('name' => $field, 'type' => 'default');
+        }
+        if (empty($form['submitted'][$field['name']]['#default_value'])) {
+            $target_key = 'value';
+            if ($field['type'] == 'country') {
+                $target_key = 'iso2';
+            }
+            if (isset($user_profile->{$key}[LANGUAGE_NONE][0][$target_key])) {
+                if ($field['type'] == 'date') {
+                    $default_date = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
+                    $default_value = array(
+                        'month' => intval(date('m', $default_date)), 
+                        'day' => intval(date('d', $default_date)), 
+                        'year' => intval(date('Y', $default_date)), 
+                    );
+                }
+                else {
+                    $default_value = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
+                }
+                $form['submitted'][$field['name']]['#default_value'] = $default_value;
+            }
+        }
+    }
 }
 
 function _ringo_eshop_validate_delivery($form, &$form_state) {
