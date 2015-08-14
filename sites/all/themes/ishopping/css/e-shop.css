@@ -97,7 +97,7 @@ ul.action-links li a:hover{
     border-color:#CDCDCD;
 }
 .horizontal-tabs ul.horizontal-tabs-list li a:hover{
-	background-color: #000;
+    background-color: #000;
     border-color:#CDCDCD;
 }
 .galleryformatter .gallery-thumbs li a{
@@ -432,7 +432,7 @@ div#webform-component-panes--webform-nid81--0--title {
 }
 
 li#menu-926-1 {
-    background: rgba(0, 0, 0, 0) url("../images/eshop-icon.png") no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("../images/eshop-icon.png") no-repeat scroll center center !important;
     text-indent: -1000;
 }
 
