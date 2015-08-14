@@ -105,17 +105,15 @@ ul.action-links li a:hover{
     background-color: #202020;
 	
 }
+
 .horizontal-tabs ul.horizontal-tabs-list li {
     float: right;
+    width: 14%;
 }
-.horizontal-tabs ul.horizontal-tabs-list li a{
-    background-color: #5D2A75;
-    border-color:#CDCDCD;
+li.horizontal-tab-button-1 {
+    width: 18% !important;
 }
-.horizontal-tabs ul.horizontal-tabs-list li a:hover{
-	background-color: #000;
-    border-color:#CDCDCD;
-}
+
 .galleryformatter .gallery-thumbs li a{
 	border-color: #5D2A75;
 }
@@ -246,10 +244,13 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 .ui-tabs .ui-tabs-nav li {
     float: right;
 }
-
+.pos-left,
+.uc-cart-checkout-form div#webform-client-form-81 .form-item, 
+.uc-cart-checkout-form div#webform-client-form-80 .form-item,
 .hot-products-view .views-field-uc-product-image,
 input.form-radio,
-.uc-cart-checkout-form #ringo_contact_info-pane.fieldset .form-item, .uc-cart-checkout-form #id_document-pane.fieldset .form-item,
+.uc-cart-checkout-form #ringo_contact_info-pane.fieldset .form-item, 
+.uc-cart-checkout-form #id_document-pane.fieldset .form-item,
 #uc-cart-view-form .form-actions a,
 .views-field-display-price {
     float: right;
@@ -287,7 +288,7 @@ caption, th, td,
     margin-left: 5px;
 }
 .block .sf-menu.sf-style-ishopping li li a.menuparent {
-    background: rgba(0, 0, 0, 0) url("../images/arrow-7-rtl.png") no-repeat scroll 100% 12px;
+    background: rgba(0, 0, 0, 0) url("../images/arrow-rtl.png") no-repeat scroll 0px 12px !important;
 }
 .field-type-taxonomy-term-reference .field-label {
     float: none;
@@ -315,4 +316,7 @@ td.subtotal {
 }
 #search-form .form-item-keys input.form-text {
     margin-left: 5px;
+}
+.abs-left {
+    clear: right;
 }
