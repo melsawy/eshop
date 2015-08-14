@@ -430,3 +430,13 @@ p.internat-bundle-desc span {
 div#webform-component-panes--webform-nid81--0--title {
     float: none !important;
 }
+
+li#menu-926-1 {
+    background: rgba(0, 0, 0, 0) url("../images/eshop-icon.png") no-repeat scroll center center;
+    text-indent: -1000;
+}
+
+li#menu-926-1 a {
+    background: none !important;
+    text-indent: -1000px !important;
+}
