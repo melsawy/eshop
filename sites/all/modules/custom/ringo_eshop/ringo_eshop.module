@@ -152,6 +152,52 @@ function ringo_eshop_uc_cart_item_update($item) {
 }
 
 /**
+ * Implements hook_uc_order().
+ */
+function ringo_eshop_uc_order($op, &$order, $arg2) {
+  switch ($op) {
+    case 'save':
+        // ID Document section
+        $document_id = variable_get('eshop_document_id', 80);
+        $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
+        if ($data) {
+            $fields = array(
+            'field_type' => array('value' => $data['data'][1]['value'][0]),
+            'field_id_number' => array('value' => $data['data'][2]['value'][0]),
+            'field_expiry_date' => array('value' => strtotime($data['data'][3]['value'][0])),
+            );
+            _eshop_update_user_with_order_data($fields, $order->uid);
+        }
+        // Contact info section
+        $document_id = variable_get('eshop_contact_info_id', 81);
+        $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
+        if ($data) {
+            $fields = array(
+            'field_customer_title' => array('value' => $data['data'][1]['value'][0]), 
+            'field_first_name' => array('value' => $data['data'][2]['value'][0]),
+            'field_last_name' => array('value' => $data['data'][3]['value'][0]),
+            'field_tax_code' => array('value' => $data['data'][4]['value'][0]),
+            'field_gender' => array('value' => $data['data'][6]['value'][0]),
+            'field_province_of_birth' => array('value' => $data['data'][8]['value'][0]),
+            'field_city_of_birth' => array('value' => $data['data'][9]['value'][0]),
+            'field_country_of_birth' => array('key' => 'iso2', 'value' => $data['data'][7]['value'][0]),
+            'field_date_of_birth' => array('value' => strtotime($data['data'][5]['value'][0])),
+            );
+            _eshop_update_user_with_order_data($fields, $order->uid);
+        }
+        break;
+  }
+}
+
+function _eshop_update_user_with_order_data($fields, $uid) {
+    $account = user_load($uid);
+    foreach ($fields as $k => $v) {
+        $target_key = isset($v['key']) ? $v['key'] : 'value';
+        $account->{$k}[LANGUAGE_NONE][0][$target_key] = $v['value'];
+    }
+    user_save($account);
+}
+/**
  * Implements of hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
@@ -294,13 +340,15 @@ function _eshop_checkout_set_default_values(&$form, $fields) {
 
 function _ringo_eshop_validate_delivery($form, &$form_state) {
     // validate delivery mobile number
-    $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
-    if(!preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
-        form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping mobile number.')) ;
+    if (isset($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
+        $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
+        if(!preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
+            form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping mobile number.')) ;
+        }
     }
     // validate billing mobile number
     $phone = $form_state['values']['panes']['billing']['address']['billing_phone'];
-    if (!$form_state['values']['panes']['billing']['copy_address'] && !preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
+    if (isset($form_state['values']['panes']['billing']['copy_address']) && !$form_state['values']['panes']['billing']['copy_address'] && !preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
         form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing mobile number.')) ;
     }
 }
