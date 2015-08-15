@@ -192,6 +192,8 @@ function ringo_eshop_uc_order($op, &$order, $arg2) {
 function _eshop_update_user_with_order_data($fields, $uid) {
     $account = user_load($uid);
     foreach ($fields as $k => $v) {
+        if(empty($v['value']))
+            return;
         $target_key = isset($v['key']) ? $v['key'] : 'value';
         $account->{$k}[LANGUAGE_NONE][0][$target_key] = $v['value'];
     }
