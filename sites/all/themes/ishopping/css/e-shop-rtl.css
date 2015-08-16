@@ -325,3 +325,7 @@ td.subtotal {
 .abs-left {
     clear: right;
 }
+
+.chosen-container .chosen-drop {
+   left:99999px !important; 
+}
