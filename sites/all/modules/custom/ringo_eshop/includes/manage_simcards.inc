@@ -81,10 +81,29 @@ function esho_add_sim_form_validate($form, &$form_state) {
   if(!ctype_digit($simcard_number)) {
     form_set_error('simcard_number', t('Sim-card number must be numeric value')) ;
   }
+  else {
+      // Check number duplicate
+      $result = db_query('
+            SELECT COUNT(ao.oid)
+            FROM {uc_attribute_options} ao
+            INNER JOIN {uc_product_options} po ON ao.oid = po.oid
+            WHERE ao.aid = :aid AND nid = :nid 
+            AND name = :number
+            ', array(
+                ':aid' => 2, 
+                ':nid' => variable_get('ringo_eshop_sim_id', 30),
+                ':number' => $simcard_number,
+                )
+            )->fetchField();
+        if ($result) {
+            form_set_error('simcard_number', t('Sim-card number exists')) ;
+        }
+  }
 
   if(!is_numeric($simcard_price)) {
     form_set_error('simcard_price', t('Sim-card price must be numeric value')) ;
   }
+  
 }
 
 
