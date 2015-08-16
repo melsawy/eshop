@@ -18,6 +18,24 @@ jQuery(document).ready(function () {
         updateSummary();
     });
     updateSummary();
+    // update number select list
+    if (Drupal.settings.ringo_eshop.eshop_number_chosen_ajax) {
+    jQuery( "#edit_attributes_2_chosen div.chosen-search input").keyup(function() {
+        var search_value = jQuery(this).val();
+        jQuery.get(
+                Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eshop/select-number', 
+                {search_value : search_value},
+                function(data, status, xhr) {
+                   jQuery('#edit-attributes-2').empty().append('<option value="">'+ Drupal.t('- Select -') +'</option>');
+                   jQuery.each(data , function(i, v) {
+                        var new_option = jQuery('<option value="'+ v['key'] +'">'+ v['value'] +'</option>');
+                        jQuery('#edit-attributes-2').append(new_option);
+                   });
+                   jQuery('#edit-attributes-2').trigger("chosen:updated");
+                   jQuery('#edit_attributes_2_chosen div.chosen-search input').val(search_value);
+                });
+    });
+    }
 });
 
 

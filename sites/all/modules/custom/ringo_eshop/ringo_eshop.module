@@ -39,8 +39,37 @@ function ringo_eshop_menu() {
     'file' => 'ringo_eshop.admin.inc',
     'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
   );
-
+  $items['eshop/select-number'] = array(
+    'page callback' => '_eshop_select_number',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+function _eshop_select_number() {
+    $options = array();
+    $search_value = $_GET['search_value'];
+    $result = db_query('
+            SELECT ao.oid, name
+            FROM {uc_attribute_options} ao
+            INNER JOIN {uc_product_options} po ON ao.oid = po.oid
+            WHERE ao.aid = :aid AND nid = :nid AND ao.oid NOT IN 
+            (
+                SELECT oid FROM {ringo_eshop_numbers}
+            ) 
+            AND name LIKE :number
+            ', array(
+                ':aid' => 2, 
+                ':nid' => variable_get('ringo_eshop_sim_id', 30),
+                ':number' => '%' . db_like($search_value) . '%'
+                )
+            )->fetchAllKeyed(0, 1);
+    
+    foreach ($result as $k => $v) {
+         $options[] = array('key' => $k, 'value' => $v);
+    }
+    drupal_json_output($options);
 }
 
 /*
@@ -238,6 +267,14 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $query->addField('rn', 'oid');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
     $form['attributes'][2]['#options'] = array_diff_key($form['attributes'][2]['#options'], $locked_options);
+    $eshop_number_chosen_ajax = 0;
+    $eshop_limit_numers = variable_get('eshop_limit_numers', 20);
+    if (count($form['attributes'][2]['#options']) > $eshop_limit_numers) {
+        $eshop_number_chosen_ajax = 1;
+        $form['attributes'][2]['#options'] =  array_slice($form['attributes'][2]['#options'], 0, $eshop_limit_numers+1, TRUE);
+    }
+    $setting = array('ringo_eshop' => array('eshop_number_chosen_ajax' => $eshop_number_chosen_ajax));
+    drupal_add_js($setting, 'setting');
     // localize card options
     $card_types = array();
     foreach ($form['attributes'][1]['#options'] as $k => $v) {
