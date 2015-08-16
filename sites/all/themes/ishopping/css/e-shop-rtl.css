@@ -218,6 +218,7 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 
 .field-type-taxonomy-term-reference .field-label {
     float: right;
+    direction: rtl;
 }
 
 .node-content .model.product-info {
@@ -258,6 +259,7 @@ input.form-radio,
 .views-field-display-price {
     float: right;
 }
+.cart-review td.subtotal span.uc-price,
 .view-filters .views-exposed-form div.filter-sortby-arrow-wrapper,
 .views-exposed-form .views-exposed-widget,
 .node-content .display-price,
@@ -295,10 +297,6 @@ caption, th, td,
     background: rgba(0, 0, 0, 0) url("../images/arrow-rtl.png") no-repeat scroll 0px 12px !important;
     padding-right: 0px !important;
 }
-.field-type-taxonomy-term-reference .field-label {
-    float: none;
-    direction: rtl;
-}
 .order-review-table .review-button-row td,
 .uc-cart-checkout-form .form-actions,
 #uc-cart-view-form .form-actions,
@@ -331,4 +329,12 @@ td.subtotal {
 }
 .chosen-container.chosen-with-drop .chosen-drop {
    left:0px !important; 
+}
+
+.gallery-thumbs li.empty {
+    display: none;
+}
+
+.cart-review td.subtotal span.uc-price {
+    padding-right: 10px;
 }
