@@ -50,7 +50,7 @@ function ringo_eshop_menu() {
 function _eshop_select_number() {
     $options = array();
     $search_value = $_GET['search_value'];
-    $result = db_query('
+    $result = db_query_range('
             SELECT ao.oid, name
             FROM {uc_attribute_options} ao
             INNER JOIN {uc_product_options} po ON ao.oid = po.oid
@@ -64,7 +64,7 @@ function _eshop_select_number() {
                 ':nid' => variable_get('ringo_eshop_sim_id', 30),
                 ':number' => '%' . db_like($search_value) . '%'
                 )
-            )->fetchAllKeyed(0, 1);
+            ,0, variable_get('eshop_limit_numers', 20))->fetchAllKeyed(0, 1);
     
     foreach ($result as $k => $v) {
          $options[] = array('key' => $k, 'value' => $v);
