@@ -244,6 +244,9 @@ input.form-submit:hover, a.button:hover, input.form-submit:focus, a.button:focus
 .ui-tabs .ui-tabs-nav li {
     float: right;
 }
+.payment-details-credit .field-suffix,
+.payment-details-credit input, .payment-details-credit select,
+.payment-details-credit label,
 .pos-left,
 .uc-cart-checkout-form div#webform-client-form-81 .form-item, 
 .uc-cart-checkout-form div#webform-client-form-80 .form-item,
@@ -255,6 +258,7 @@ input.form-radio,
 .views-field-display-price {
     float: right;
 }
+.view-filters .views-exposed-form div.filter-sortby-arrow-wrapper,
 .views-exposed-form .views-exposed-widget,
 .node-content .display-price,
 #line-items-div,
@@ -289,6 +293,7 @@ caption, th, td,
 }
 .block .sf-menu.sf-style-ishopping li li a.menuparent {
     background: rgba(0, 0, 0, 0) url("../images/arrow-rtl.png") no-repeat scroll 0px 12px !important;
+    padding-right: 0px !important;
 }
 .field-type-taxonomy-term-reference .field-label {
     float: none;
