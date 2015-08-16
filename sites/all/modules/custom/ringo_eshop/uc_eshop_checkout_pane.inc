@@ -113,11 +113,11 @@ function ringo_eshop_horizontal_browsing_tabs_pane_checkout($op, &$order, $form 
         drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js') ;
         
         $row_text = t('Your Information') ;
-        $scoll_to_id = "customer-pane" ;   
+        $scoll_to_id = "webform_nid81-pane" ;   
         $rows[0][0] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
          
         $row_text = t('ID Document') ;
-        $scoll_to_id = "id_document-pane" ;    
+        $scoll_to_id = "webform_nid80-pane" ;    
         $rows[0][1] = array('data' => $row_text, 'class' => 'checkout-scroll-tab', 'data-target' => $scoll_to_id) ; 
 
         $row_text = t('Shipping Address') ;

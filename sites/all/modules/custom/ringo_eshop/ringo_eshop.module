@@ -236,6 +236,12 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   if ($form_id == 'uc_cart_checkout_form') {
+      $form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
+      $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
+      $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
+      $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
+      $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
+      $form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
       $form['panes']['delivery']['#title'] = t('Shipping Address');
       $form['#validate'][] = '_ringo_eshop_validate_delivery';
       $form['panes']['payment']['term_condition'] = array(
@@ -518,3 +524,35 @@ function ringo_eshop_init() {
   }
 }
 
+function _eshop_horizontal_browsing_tabs($pane) {
+        $rows = array() ; 
+        $headers = array() ; 
+        $attributes = array('class' => 'eshop-checkout-sroll-table') ;  
+         
+        //drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js') ;
+        
+        $row_text = t('Your Information') ;
+        $scoll_to_id = "webform_nid81-pane" ;
+        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+        $rows[0][0] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
+         
+        $row_text = t('ID Document') ;
+        $scoll_to_id = "webform_nid80-pane" ;    
+        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+        $rows[0][1] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
+
+        $row_text = t('Shipping Address') ;
+        $scoll_to_id = "delivery-pane" ;  
+        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+        $rows[0][2] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
+         
+        $row_text = t('Payment') ;
+        $scoll_to_id = "payment-pane" ;    
+        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+        $rows[0][3] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
+         
+         
+        $table = array('header' => $headers, 'rows' => $rows, 'attributes' => $attributes, 'sticky' => FALSE); 
+       
+        return theme('table', $table);
+}
