@@ -20,8 +20,17 @@ jQuery(document).ready(function () {
     updateSummary();
     // update number select list
     if (Drupal.settings.ringo_eshop.eshop_number_chosen_ajax) {
-    jQuery( "#edit_attributes_2_chosen div.chosen-search input").keyup(function() {
+    jQuery( "#edit_attributes_2_chosen div.chosen-search input").keyup(function(e) {
+        // get keycode of current keypress event
+        var code = (e.keyCode || e.which);
+        // do nothing if it's an arrow key
+        if(code == 37 || code == 38 || code == 39 || code == 40) {
+         return;
+        }
         var search_value = jQuery(this).val();
+        if (jQuery.isNumeric(search_value) == false) {
+            return true;
+        }
         jQuery.get(
                 Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eshop/select-number', 
                 {search_value : search_value},
