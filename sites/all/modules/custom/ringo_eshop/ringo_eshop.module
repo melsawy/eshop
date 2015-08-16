@@ -242,7 +242,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
       $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
       $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
       $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
-      $form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
+      //$form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
       $form['panes']['delivery']['#title'] = t('Shipping Address');
       $form['#validate'][] = '_ringo_eshop_validate_delivery';
       $form['panes']['payment']['term_condition'] = array(
