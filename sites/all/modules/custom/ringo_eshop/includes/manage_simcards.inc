@@ -96,7 +96,7 @@ function esho_add_sim_form_validate($form, &$form_state) {
                 )
             )->fetchField();
         if ($result) {
-            form_set_error('simcard_number', t('Sim-card number exists')) ;
+            form_set_error('simcard_number', t('This Sim-card number has been added before')) ;
         }
   }
 
