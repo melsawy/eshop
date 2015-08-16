@@ -259,7 +259,7 @@ input.form-radio,
 .views-field-display-price {
     float: right;
 }
-.cart-review td.subtotal span.uc-price,
+td.subtotal span.uc-price,
 .view-filters .views-exposed-form div.filter-sortby-arrow-wrapper,
 .views-exposed-form .views-exposed-widget,
 .node-content .display-price,
@@ -331,6 +331,6 @@ td.subtotal {
    left:0px !important; 
 }
 
-.cart-review td.subtotal span.uc-price {
+td.subtotal span.uc-price {
     padding-right: 10px;
 }
