@@ -324,6 +324,7 @@ table.eshop-checkout-sroll-table td.checkout-scroll-tab {
    transition: all 200ms;   
 }
 
+table.eshop-checkout-sroll-table td.pane-selected,
 table.eshop-checkout-sroll-table td.checkout-scroll-tab:hover {
     background-color: #0779BF;  
 }
@@ -349,11 +350,10 @@ table.eshop-checkout-sroll-table td.checkout-scroll-tab:after  {
   width: 0px;       
 }
 
+table.eshop-checkout-sroll-table td.pane-selected:after,
 table.eshop-checkout-sroll-table td.checkout-scroll-tab:hover:after {
-
   border-top-color: #0779BF;   
 }
-
 
 /**
 * Frontpage CSS Updates

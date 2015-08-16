@@ -236,7 +236,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   if ($form_id == 'uc_cart_checkout_form') {
-      $form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
+      //$form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
       $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
       $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
       $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
@@ -517,6 +517,7 @@ function _ringo_eshop_assign_international_bundle_form($international_promotions
  * Implements of hook_init().
  */
 function ringo_eshop_init() {
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
   // Redirect to SIM cart product page
   if ($_GET['q'] == 'taxonomy/term/44') {
     $sim_id = variable_get('ringo_eshop_sim_id', 30);
@@ -536,7 +537,7 @@ function _eshop_horizontal_browsing_tabs($pane) {
         $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
         $rows[0][0] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
          
-        $row_text = t('ID Document') ;
+        $row_text = t('ID Document');
         $scoll_to_id = "webform_nid80-pane" ;    
         $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
         $rows[0][1] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 

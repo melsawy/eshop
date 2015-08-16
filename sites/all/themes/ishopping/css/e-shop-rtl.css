@@ -331,10 +331,6 @@ td.subtotal {
    left:0px !important; 
 }
 
-.gallery-thumbs li.empty {
-    display: none;
-}
-
 .cart-review td.subtotal span.uc-price {
     padding-right: 10px;
 }
