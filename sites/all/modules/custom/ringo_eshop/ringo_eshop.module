@@ -44,6 +44,18 @@ function ringo_eshop_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['eshop/login'] = array(
+    'title' => 'Login',
+    'page callback' => '_eshop_goto_ringo',
+    'page arguments' => array('login'),
+    'access callback' => TRUE,
+  );
+  $items['eshop/password'] = array(
+    'title' => 'Login',
+    'page callback' => '_eshop_goto_ringo',
+    'page arguments' => array('password'),
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -70,6 +82,22 @@ function _eshop_select_number() {
          $options[] = array('key' => $k, 'value' => $v);
     }
     drupal_json_output($options);
+}
+
+function _eshop_goto_ringo($preset) {
+    global $language, $base_url;
+    $path = variable_get('eshop_ringo_url', 'http://ringo.local/') . $language->language ;
+    $query = array();
+    switch($preset) {
+        case 'login':
+            $path .= '/user/login';
+            $query['eshop_url'] = $base_url . '/' . $language->language;
+            break;
+        case 'password':
+            $path .= '/user/password';
+            break;
+    }
+    drupal_goto($path, array('query' => $query));
 }
 
 /*
@@ -585,4 +613,16 @@ function _eshop_horizontal_browsing_tabs($pane) {
         $table = array('header' => $headers, 'rows' => $rows, 'attributes' => $attributes, 'sticky' => FALSE); 
        
         return theme('table', $table);
+}
+
+/**
+ * Implements of hook_url_outbound_alter().
+ */
+function ringo_eshop_url_outbound_alter(&$path, &$options, $original_path) {
+    if ($path == 'user/login') {
+        $path = 'eshop/login';
+    }
+    elseif ($path == 'user/password') {
+        $path = 'eshop/password';
+    }
 }
