@@ -56,6 +56,12 @@ function ringo_eshop_menu() {
     'page arguments' => array('password'),
     'access callback' => TRUE,
   );
+  $items['eshop-ringo'] = array(
+    'title' => 'Login',
+    'page callback' => '_eshop_goto_ringo',
+    'page arguments' => array('ringo'),
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -95,6 +101,8 @@ function _eshop_goto_ringo($preset) {
             break;
         case 'password':
             $path .= '/user/password';
+            break;
+        case 'ringo':
             break;
     }
     drupal_goto($path, array('query' => $query));
