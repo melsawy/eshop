@@ -651,10 +651,12 @@ function _eshop_horizontal_browsing_tabs($pane) {
  * Implements of hook_url_outbound_alter().
  */
 function ringo_eshop_url_outbound_alter(&$path, &$options, $original_path) {
-    if ($path == 'user/login') {
-        $path = 'eshop/login';
-    }
-    elseif ($path == 'user/password') {
-        $path = 'eshop/password';
+    if (user_is_anonymous()) {
+        if ($path == 'user') {
+            $path = 'eshop/login';
+        }
+        elseif ($path == 'user/password') {
+            $path = 'eshop/password';
+        }
     }
 }
