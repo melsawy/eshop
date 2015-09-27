@@ -251,6 +251,30 @@ function ringo_eshop_uc_order($op, &$order, $arg2) {
             _eshop_update_user_with_order_data($fields, $order->uid);
         }
         break;
+      /*
+      case 'update':
+          // Lock sim number.
+          if ($arg2 == 'pending') {
+              global $user;
+              $sim_id = variable_get('ringo_eshop_sim_id', 30);
+              foreach($order->products as $product) {
+                  if ($product->nid == $sim_id) {
+                      // log number in custom table to track this number
+                      $number = $product->data['attributes']['Number'];
+                      reset($number);
+                      echo 'I am here';exit;
+                      db_insert('ringo_eshop_numbers')
+                          ->fields(array(
+                              'oid' => key($number),
+                              'uid' => $user->uid,
+                              'status' => 1,
+                          ))
+                          ->execute();
+                  }
+              }
+          }
+          break;
+      */
   }
 }
 
@@ -488,7 +512,7 @@ function ringo_eshop_uc_cart_alter(&$items) {
 
 function ringo_eshop_uc_cart_item_delete($entity) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
-  if ($entity->nid == $sim_id) {
+  if ($entity->nid == $sim_id && $entity->qty == 0) {
     $oid =  $entity->data['attributes'][2];
     db_delete('ringo_eshop_numbers')
       ->condition('oid', $oid)
