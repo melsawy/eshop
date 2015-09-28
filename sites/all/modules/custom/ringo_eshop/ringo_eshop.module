@@ -652,7 +652,7 @@ function _eshop_horizontal_browsing_tabs($pane) {
  */
 function ringo_eshop_url_outbound_alter(&$path, &$options, $original_path) {
     if (user_is_anonymous()) {
-        if ($path == 'user') {
+        if ($path == 'user' || $path == 'user/login') {
             $path = 'eshop/login';
         }
         elseif ($path == 'user/password') {
