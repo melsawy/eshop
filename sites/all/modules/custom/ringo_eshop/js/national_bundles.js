@@ -101,8 +101,8 @@ function _assign_international_bundle() {
             else {
                 jQuery('.internat-bundle-desc').html(html);
             }
-            jQuery('#edit-attributes-5').val(jQuery('.internat-bundle-desc').text());
         }
+        jQuery('#edit-attributes-5').val(jQuery('.internat-bundle-desc').text());
     });
 }
 
