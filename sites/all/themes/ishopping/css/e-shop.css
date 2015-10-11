@@ -289,6 +289,10 @@ table.nat-bundle tr th {
     padding-right: 40%;
 }
 
+.uc-cart-checkout-form div.error {
+    float: left;
+}
+
 form a, form a:visited {
   color: #AD56D7;
 }
