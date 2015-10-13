@@ -446,20 +446,18 @@ function _eshop_checkout_set_default_values(&$form, $fields) {
 
 function _ringo_eshop_validate_delivery($form, &$form_state) {
   global $user;
-  /*
-    // validate delivery mobile number
-    if (isset($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
-        $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
-        if(!preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
-            form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping mobile number.')) ;
-        }
+  // validate delivery mobile number
+  if (isset($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
+    $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
+    if(!is_numeric($phone)) {
+      form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping mobile number.')) ;
     }
-    // validate billing mobile number
-    $phone = $form_state['values']['panes']['billing']['address']['billing_phone'];
-    if (isset($form_state['values']['panes']['billing']['copy_address']) && !$form_state['values']['panes']['billing']['copy_address'] && !preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
-        form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing mobile number.')) ;
-    }
-   */
+  }
+  // validate billing mobile number
+  $phone = $form_state['values']['panes']['billing']['address']['billing_phone'];
+  if (isset($form_state['values']['panes']['billing']['copy_address']) && !$form_state['values']['panes']['billing']['copy_address'] && !is_numeric($phone)) {
+    form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing mobile number.')) ;
+  }
   // validate id number
   if (isset($form_state['values']['panes']['webform_nid80'][0]['number'])) {
     $result = db_query('
