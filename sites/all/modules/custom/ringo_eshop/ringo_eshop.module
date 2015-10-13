@@ -292,7 +292,6 @@ function _eshop_update_user_with_order_data($fields, $uid) {
  * Implements of hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
-  echo $form_id . "\n";
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
