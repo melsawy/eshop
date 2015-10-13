@@ -445,7 +445,8 @@ function _eshop_checkout_set_default_values(&$form, $fields) {
 }
 
 function _ringo_eshop_validate_delivery($form, &$form_state) {
-     global $user;
+  global $user;
+  /*
     // validate delivery mobile number
     if (isset($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
         $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
@@ -458,33 +459,34 @@ function _ringo_eshop_validate_delivery($form, &$form_state) {
     if (isset($form_state['values']['panes']['billing']['copy_address']) && !$form_state['values']['panes']['billing']['copy_address'] && !preg_match('/^\+{0,1}(?:[0-9] ?){6,14}[0-9]$/', $phone, $matches)) {
         form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing mobile number.')) ;
     }
-    // validate id number
-    if (isset($form_state['values']['panes']['webform_nid80'][0]['number'])) {
-        $result = db_query('
-                    SELECT COUNT(ws.sid) 
-                    FROM {webform_submissions} ws 
-                    INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
-                    WHERE ws.nid = :nid AND uid != :uid AND data = :data
-                ', array(':nid' => 80, ':cid' => 2, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid80'][0]['number'])
-                )->fetchField();
-        if ($result) {
-            form_set_error('panes][webform_nid80][0][number', t('Same ID number exists for another user.')) ;
-        }
+   */
+  // validate id number
+  if (isset($form_state['values']['panes']['webform_nid80'][0]['number'])) {
+    $result = db_query('
+      SELECT COUNT(ws.sid) 
+      FROM {webform_submissions} ws 
+      INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
+      WHERE ws.nid = :nid AND uid != :uid AND data = :data
+      ', array(':nid' => 80, ':cid' => 2, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid80'][0]['number'])
+    )->fetchField();
+    if ($result) {
+      form_set_error('panes][webform_nid80][0][number', t('Same ID number exists for another user.')) ;
     }
-    // validate tax code
-    if (isset($form_state['values']['panes']['webform_nid81'][0]['tax_code'])) {
-        $result = db_query('
-                    SELECT COUNT(ws.sid) 
-                    FROM {webform_submissions} ws 
-                    INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
-                    WHERE ws.nid = :nid AND uid != :uid AND data = :data
-                ', array(':nid' => 81, ':cid' => 4, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid81'][0]['tax_code'])
-                )->fetchField();
-        if ($result) {
-            form_set_error('panes][webform_nid81][0][tax_code', t('Same tax code exists for another user.')) ;
-        }
+  }
+  // validate tax code
+  if (isset($form_state['values']['panes']['webform_nid81'][0]['tax_code'])) {
+    $result = db_query('
+      SELECT COUNT(ws.sid) 
+      FROM {webform_submissions} ws 
+      INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
+      WHERE ws.nid = :nid AND uid != :uid AND data = :data
+      ', array(':nid' => 81, ':cid' => 4, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid81'][0]['tax_code'])
+    )->fetchField();
+    if ($result) {
+      form_set_error('panes][webform_nid81][0][tax_code', t('Same tax code exists for another user.')) ;
     }
-    
+  }
+
 }
 /**
  *Implements of hook_uc_cart_alter().
