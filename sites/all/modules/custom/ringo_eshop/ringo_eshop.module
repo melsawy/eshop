@@ -292,6 +292,7 @@ function _eshop_update_user_with_order_data($fields, $uid) {
  * Implements of hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
+  echo $form_id . "\n";
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
@@ -382,6 +383,9 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $form['qty']['#weight'] = 4;
     // Submit form via JS to do validation through client side.
     $form['actions']['submit']['#attributes']['onclick'] = 'javascript: _sim_item_add_to_cart();return false;';
+  }
+  if ($form_id == 'user_register_form') {
+    $form['#validate'][] = '_ringo_eshop_validate_address_phone';
   }
 }
 
@@ -486,6 +490,14 @@ function _ringo_eshop_validate_delivery($form, &$form_state) {
   }
 
 }
+
+function _ringo_eshop_validate_address_phone($form, &$form_state) {
+  // validate delivery mobile number
+  if (!empty($form_state['uc_addresses_address']['phone']) && !is_numeric($form_state['uc_addresses_address']['phone'])) {
+      form_set_error('address][phone', t('You should add a valid telephone number.')) ;
+  }
+}
+
 /**
  *Implements of hook_uc_cart_alter().
  */
