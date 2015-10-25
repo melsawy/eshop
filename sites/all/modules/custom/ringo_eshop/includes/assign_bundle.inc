@@ -51,7 +51,7 @@ function assign_eshop_international_bundle_form($form, $form_state) {
 /**
  * Assign bundle form validation.
  */
-function assign_bundle_form_validate($form, &$form_state) {
+function assign_eshop_international_bundle_form_validate($form, &$form_state) {
 }
 
 /**
@@ -275,7 +275,7 @@ function assign_international_bundle_form($form_state, $international_promotions
     $region_id = $region_promotions['regionId'];
     $regions[$region_promotions['regionId']] = t($region_promotions['regionName']);
     // Show selected country if any.
-    if (isset($form_state['values']['int-region']) && $form_state['values']['int-region'] == $region_promotions['regionId']) {
+    if (isset($form_state['input']['int-region']) && $form_state['input']['int-region'] == $region_promotions['regionId']) {
       $table_region = $region_promotions;
       $taken_bundles = isset($user_regions[$region_id]) ? $user_regions[$region_id] : array();
     }
