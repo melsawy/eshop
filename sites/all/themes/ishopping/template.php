@@ -102,3 +102,51 @@ function ishopping_css_alter(&$css) {
   }
 
 }
+
+/**
+ * Hide labels for some uc attributes.
+ */
+function ishopping_uc_product_attributes($variables) {
+  $attributes = $variables['attributes'];
+
+  $option_rows = array();
+
+  foreach (element_children($attributes) as $key) {
+    $optionstr = '';
+
+    foreach ((array)$attributes[$key]['#options'] as $option) {
+      // We only need to allow translation from the second option onward
+      if (empty($optionstr)) {
+        $optionstr .= $option;
+      }
+      else {
+        $optionstr .= t(', !option', array('!option' => $option));
+      }
+    }
+
+    $hide_label = in_array($attributes[$key]['#attribute_name'], array(
+      'National offer',
+      'International offer'
+    ));
+
+    if ($optionstr != '') {
+      if ($hide_label) {
+        $option_rows[$key] = t('@option', array(
+          '@option' => $optionstr
+        ));
+      }
+      else {
+        $option_rows[$key] = t('@attribute: @option', array(
+          '@attribute' => $attributes[$key]['#attribute_name'],
+          '@option' => $optionstr
+        ));
+      }
+    }
+  }
+
+  if (!empty($option_rows)) {
+    return theme('item_list', array('items' => array_values($option_rows), 'attributes' => array('class' => array('product-description'))));
+  }
+
+  return '';
+}

@@ -19,7 +19,8 @@ jQuery(document).ready(function () {
     });
     updateSummary();
     // update number select list
-    if (Drupal.settings.ringo_eshop.eshop_number_chosen_ajax) {
+    if (typeof Drupal.settings.ringo_eshop !== "undefined" &&
+      typeof Drupal.settings.ringo_eshop.eshop_number_chosen_ajax !== "undefined") {
     jQuery( "#edit_attributes_2_chosen div.chosen-search input").keyup(function(e) {
         // get keycode of current keypress event
         var code = (e.keyCode || e.which);
@@ -32,7 +33,7 @@ jQuery(document).ready(function () {
             return true;
         }
         jQuery.get(
-                Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eshop/select-number', 
+                Drupal.settings.basePath + Drupal.settings.pathPrefix + 'eshop/select-number',
                 {search_value : search_value},
                 function(data, status, xhr) {
                    jQuery('#edit-attributes-2').empty().append('<option value="">'+ Drupal.t('- Select -') +'</option>');
@@ -48,7 +49,7 @@ jQuery(document).ready(function () {
 });
 
 
-
+// Update national package price in the Sim Card page.
 function updateSummary() {
   if (jQuery('table.nat-bundle').length == 0) {
     return;
@@ -85,6 +86,7 @@ function updateSummary() {
   }
 }
 
+// Update international bundles summary in the bundles page.
 function _assign_international_bundle() {
     var country_id = jQuery('#edit-int-region :selected').val();
     var country_name = jQuery('#edit-int-region :selected').text();
@@ -94,9 +96,10 @@ function _assign_international_bundle() {
             idd = jQuery(this).attr('id');
             var price = jQuery('#'+ idd).parent().parents('tr').find('td.price').html();
             var size = jQuery('#'+ idd).parent().parents('tr').find('td.size').html();
-            var html = '<span data-id="'+ country_id +'">'+ country_name +'('+ size +') - "'+ price +'"</span>';
+            var activationFee = jQuery('#'+ idd).parent().parents('tr').find('td.activation-fee').html();
+            var html = '<span data-id="'+ country_id +'">'+ country_name +'('+ size +') - "'+ price +'" + "' + activationFee + '"</span>';
             if (jQuery('.internat-bundle-desc').html()) {
-                jQuery('.internat-bundle-desc').append(html);
+                jQuery('.internat-bundle-desc').append("\n" + html);
             }
             else {
                 jQuery('.internat-bundle-desc').html(html);

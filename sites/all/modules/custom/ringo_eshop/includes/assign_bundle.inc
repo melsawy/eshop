@@ -220,7 +220,7 @@ function get_international_table($region_data, $show_radios = TRUE, $taken_bundl
       t('!count Min', array('!count' => $offer['quantity'])),
       array('data' => t('!count €', array('!count' => $offer['price'])), 'class' => array('price')),
       t('!count €', array('!count' => $offer['ratePerMin'])),
-      t('!count €', array('!count' => $offer['activationFee'])),
+      array('data' => t('!count €', array('!count' => $offer['activationFee'])) , 'class' => array('activation-fee')),
     );
   }
 
@@ -393,7 +393,7 @@ function assign_national_bundle_form($national_bundles, $user_bundles = NULL) {
     );
 
     $options = array();
-    $type_sign = ''; 
+    $type_sign = '';
     if (strtolower($type) == 'voice') {
         $type_sign = t(' (Minutes)');
     }
