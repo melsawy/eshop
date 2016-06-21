@@ -744,7 +744,7 @@ function _ringo_eshop_contract_link() {
   if (is_numeric($fid)) {
     $file = file_load($fid);
     if ($file) {
-      $link = l(t('here'), file_create_url($file->uri), array('attributes' => array('_target' => '_blank')));
+      $link = l(t('here'), file_create_url($file->uri), array('attributes' => array('target' => '_blank')));
       print '<h1><br>' . t('Click !here to download contract', array('!here' => $link)) . '</h1>';
     }
   }
