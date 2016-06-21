@@ -126,19 +126,17 @@ function ishopping_uc_product_attributes($variables) {
 
     $hide_label = in_array($attributes[$key]['#attribute_name'], array(
       'National offer',
-      'International offer'
+      'International offer',
     ));
 
     if ($optionstr != '') {
       if ($hide_label) {
-        $option_rows[$key] = t('@option', array(
-          '@option' => $optionstr
-        ));
+        $option_rows[$key] = nl2br($optionstr);
       }
       else {
         $option_rows[$key] = t('@attribute: @option', array(
           '@attribute' => $attributes[$key]['#attribute_name'],
-          '@option' => $optionstr
+          '@option' => $optionstr,
         ));
       }
     }

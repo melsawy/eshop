@@ -22,6 +22,10 @@ function uc_cart_edit_form_alter(&$form, $form_state, $form_id) {
       strpos($form_id, 'uc_product_kit_add_to_cart_form') !== FALSE) {
 
     $cart_item_ids = isset($_GET['ciids']) ? $_GET['ciids'] : NULL;
+    if (is_null($cart_item_ids) && isset($form_state['values']['cart_item_ids'])) {
+      $cart_item_ids = $form_state['values']['cart_item_ids'];
+    }
+
     if (is_array($cart_item_ids)) {
       // Cart ID is needed for access validation.
       $cart_id = uc_cart_get_id();
