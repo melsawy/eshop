@@ -78,21 +78,22 @@ function ringo_eshop_menu() {
 function _eshop_select_number() {
   $options = array();
   $search_value = $_GET['search_value'];
+  $limit = variable_get('eshop_limit_numers', 20);
   $result = db_query_range('
-            SELECT ao.oid, name
-            FROM {uc_attribute_options} ao
-            INNER JOIN {uc_product_options} po ON ao.oid = po.oid
-            WHERE ao.aid = :aid AND nid = :nid AND ao.oid NOT IN 
-            (
-                SELECT oid FROM {ringo_eshop_numbers}
-            ) 
-            AND name LIKE :number
-            ', array(
-      ':aid' => 2,
-      ':nid' => variable_get('ringo_eshop_sim_id', 30),
-      ':number' => '%' . db_like($search_value) . '%',
-    ),
-    0, variable_get('eshop_limit_numers', 20))->fetchAllKeyed(0, 1);
+      SELECT ao.oid, name
+      FROM {uc_attribute_options} ao
+      INNER JOIN {uc_product_options} po ON ao.oid = po.oid
+      WHERE ao.aid = :aid AND nid = :nid AND ao.oid NOT IN 
+      (
+          SELECT oid FROM {ringo_eshop_numbers}
+      ) 
+      AND name LIKE :number
+      ', array(
+        ':aid' => 2,
+        ':nid' => variable_get('ringo_eshop_sim_id', 30),
+        ':number' => '%' . db_like($search_value) . '%',
+      ),
+    0, $limit)->fetchAllKeyed(0, 1);
 
   foreach ($result as $k => $v) {
     $options[] = array('key' => $k, 'value' => $v);
@@ -310,56 +311,65 @@ function _eshop_update_user_with_order_data($fields, $uid) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function ringo_eshop_form_uc_cart_checkout_form_alter(&$form, &$form_state) {
+  //$form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
+  $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
+  $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
+  $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
+  $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
+  //$form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
+  $form['panes']['delivery']['#title'] = t('Shipping Address');
+  $form['#validate'][] = '_ringo_eshop_validate_delivery';
+  $form['panes']['payment']['term_condition'] = array(
+    '#prefix' => '<div class="form-inline conditions-and-submit">',
+    '#type' => 'checkbox',
+    '#title' => t(
+      'Accept !terms_and_conditions and !privacy_policy',
+      array(
+        '!privacy_policy' => l(
+          t('Privacy Policy'),
+          variable_get('ringo_privacy_link', '<front>'),
+          array('attributes' => array('target' => '_blank'))
+        ),
+        '!terms_and_conditions' => l(
+          t('Terms and Conditions'),
+          variable_get('ringo_terms_and_conditions', '<front>'),
+          array('attributes' => array('target' => '_blank'))
+        ),
+      )
+    ),
+    '#required' => TRUE,
+  );
+}
+
+/**
  * Implements hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
-  if ($form_id == 'uc_cart_checkout_form') {
 
-    //$form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
-    $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
-    $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
-    $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
-    $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
-    //$form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
-    $form['panes']['delivery']['#title'] = t('Shipping Address');
-    $form['#validate'][] = '_ringo_eshop_validate_delivery';
-    $form['panes']['payment']['term_condition'] = array(
-      '#prefix' => '<div class="form-inline conditions-and-submit">',
-      '#type' => 'checkbox',
-      '#title' => t(
-        'Accept !terms_and_conditions and !privacy_policy',
-        array(
-          '!privacy_policy' => l(
-            t('Privacy Policy'),
-            variable_get('ringo_privacy_link', '<front>'),
-            array('attributes' => array('target' => '_blank'))
-          ),
-          '!terms_and_conditions' => l(
-            t('Terms and Conditions'),
-            variable_get('ringo_terms_and_conditions', '<front>'),
-            array('attributes' => array('target' => '_blank'))
-          ),
-        )
-      ),
-      '#required' => TRUE,
-    );
-
-  }
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_' . $sim_id) {
+
     $form['attributes'][5]['#type'] = 'textarea';
-    $query = db_select('ringo_eshop_numbers', 'rn');
-    $query->addField('rn', 'oid');
+
+    // Allowed phone numbers.
+    $query = db_select('ringo_eshop_numbers', 'rn')
+      ->fields('rn', array('oid'))
+      ->condition('oid', $form['attributes'][2]['#default_value'], '<>');
     $locked_options = $query->execute()->fetchAllKeyed(0, 0);
     $form['attributes'][2]['#options'] = array_diff_key($form['attributes'][2]['#options'], $locked_options);
+
     $eshop_number_chosen_ajax = 0;
-    $eshop_limit_numers = variable_get('eshop_limit_numers', 20);
-    if (count($form['attributes'][2]['#options']) > $eshop_limit_numers) {
+
+    $limit = variable_get('eshop_limit_numers', 20);
+    if (count($form['attributes'][2]['#options']) > $limit) {
       $eshop_number_chosen_ajax = 1;
-      $form['attributes'][2]['#options'] = array_slice($form['attributes'][2]['#options'], 0, $eshop_limit_numers + 1, TRUE);
+      $form['attributes'][2]['#options'] = array_slice($form['attributes'][2]['#options'], 0, $limit + 1, TRUE);
     }
     $setting = array('ringo_eshop' => array('eshop_number_chosen_ajax' => $eshop_number_chosen_ajax));
     drupal_add_js($setting, 'setting');
@@ -372,6 +382,7 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $form['attributes'][1]['#options'] = $card_types;
     $card_keys = array_keys($card_types);
     $form['attributes'][1]['#default_value'] = $card_keys[0];
+
     // Add national offers.
     $summary_text = t('National Offers: You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
   an estimated monthly bill of "!price € / month"',
@@ -747,5 +758,18 @@ function _ringo_eshop_contract_link() {
       $link = l(t('here'), file_create_url($file->uri), array('attributes' => array('target' => '_blank')));
       print '<h1><br>' . t('Click !here to download contract', array('!here' => $link)) . '</h1>';
     }
+  }
+}
+
+/**
+ * Implments hook_module_implements_alter().
+ *
+ * Essential for editing cart items.
+ */
+function ringo_eshop_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter') {
+    $group = $implementations['ringo_eshop'];
+    unset($implementations['ringo_eshop']);
+    $implementations['ringo_eshop'] = $group;
   }
 }

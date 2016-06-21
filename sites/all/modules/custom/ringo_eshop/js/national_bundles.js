@@ -3,6 +3,7 @@ jQuery(document).ready(function () {
     //adjust elements for natinal bundles
     jQuery('#tabs').tabs();
     jQuery('div.attribute-4, div.attribute-5').hide();
+
     jQuery('table.nat-bundle td:not(.package, .disabled)').click(function () {
         jQuery(this).toggleClass('selected-cell').siblings().removeClass('selected-cell');
 
@@ -15,9 +16,12 @@ jQuery(document).ready(function () {
         else {
             jQuery("input[name=" + group + "][value=" + package_id + "]").prop('checked', false);
         }
-        updateSummary();
+        _assign_national_bundle();
     });
-    updateSummary();
+
+    _assign_national_bundle();
+    _assign_international_bundle();
+
     // update number select list
     if (typeof Drupal.settings.ringo_eshop !== "undefined" &&
       typeof Drupal.settings.ringo_eshop.eshop_number_chosen_ajax !== "undefined") {
@@ -50,7 +54,7 @@ jQuery(document).ready(function () {
 
 
 // Update national package price in the Sim Card page.
-function updateSummary() {
+function _assign_national_bundle() {
   if (jQuery('table.nat-bundle').length == 0) {
     return;
   }
