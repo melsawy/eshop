@@ -10,8 +10,8 @@ require_once dirname(__FILE__) . '/uc_eshop_checkout_pane.inc';
 
 
 /**
-* Implement of hook_menu().
-*/
+ * Implements hook_menu().
+ */
 function ringo_eshop_menu() {
   $items = array();
   $items['my-ringo/manage-bundles'] = array(
@@ -24,12 +24,12 @@ function ringo_eshop_menu() {
     'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
   );
   $items['manage/sim-cards'] = array(
-    'title' => t('Manage Sim-cards'),
+    'title' => 'Manage Sim-cards',
     'page callback' => '_ringo_eshop_manage_simcards',
     'access arguments' => array('Administer product options'),
     'file' => 'manage_simcards.inc',
     'file path' => drupal_get_path('module', 'ringo_eshop') . '/includes',
-  );        
+  );
   $items['admin/config/system/eshop'] = array(
     'title' => 'eshop',
     'description' => 'Manage general eshop configuration.',
@@ -66,9 +66,9 @@ function ringo_eshop_menu() {
 }
 
 function _eshop_select_number() {
-    $options = array();
-    $search_value = $_GET['search_value'];
-    $result = db_query_range('
+  $options = array();
+  $search_value = $_GET['search_value'];
+  $result = db_query_range('
             SELECT ao.oid, name
             FROM {uc_attribute_options} ao
             INNER JOIN {uc_product_options} po ON ao.oid = po.oid
@@ -78,86 +78,87 @@ function _eshop_select_number() {
             ) 
             AND name LIKE :number
             ', array(
-                ':aid' => 2, 
-                ':nid' => variable_get('ringo_eshop_sim_id', 30),
-                ':number' => '%' . db_like($search_value) . '%'
-                )
-            ,0, variable_get('eshop_limit_numers', 20))->fetchAllKeyed(0, 1);
-    
-    foreach ($result as $k => $v) {
-         $options[] = array('key' => $k, 'value' => $v);
-    }
-    drupal_json_output($options);
+      ':aid' => 2,
+      ':nid' => variable_get('ringo_eshop_sim_id', 30),
+      ':number' => '%' . db_like($search_value) . '%',
+    ),
+    0, variable_get('eshop_limit_numers', 20))->fetchAllKeyed(0, 1);
+
+  foreach ($result as $k => $v) {
+    $options[] = array('key' => $k, 'value' => $v);
+  }
+  drupal_json_output($options);
 }
 
 function _eshop_goto_ringo($preset) {
-    global $language, $base_url;
-    $path = variable_get('eshop_ringo_url', 'http://ringo.local/') . $language->language ;
-    $query = array();
-    switch($preset) {
-        case 'login':
-            $path .= '/user/login';
-            $query['eshop_url'] = $base_url . '/' . $language->language;
-            break;
-        case 'password':
-            $path .= '/user/password';
-            break;
-        case 'ringo':
-            break;
-    }
-    drupal_goto($path, array('query' => $query));
+  global $language, $base_url;
+  $path = variable_get('eshop_ringo_url', 'http://ringo.local/') . $language->language;
+  $query = array();
+  switch ($preset) {
+    case 'login':
+      $path .= '/user/login';
+      $query['eshop_url'] = $base_url . '/' . $language->language;
+      break;
+
+    case 'password':
+      $path .= '/user/password';
+      break;
+
+    case 'ringo':
+      break;
+  }
+  drupal_goto($path, array('query' => $query));
 }
 
 /*
  * Implement of hook_theme().
  */
-function ringo_eshop_theme(){
-    return array(
-        'manage_simcards_template' => array(
-            // file name will be custom-page.tpl.php
-            'variables' => array('options' => null, 'num_status' => null),
-            'template' => "manage-simcards",
-            'path' => drupal_get_path("module", "ringo_eshop")."/templates" ,
-        ),
-    );
+function ringo_eshop_theme() {
+  return array(
+    'manage_simcards_template' => array(
+      // File name will be custom-page.tpl.php.
+      'variables' => array('options' => NULL, 'num_status' => NULL),
+      'template' => "manage-simcards",
+      'path' => drupal_get_path("module", "ringo_eshop") . "/templates",
+    ),
+  );
 }
 
 /**
- * Implementation of hook_uc_checkout_pane()
+ * Implements hook_uc_checkout_pane().
  */
-
 function ringo_eshop_uc_checkout_pane() {
   $panes[] = array(
     'id' => 'horizontal_browsing_tabs',
-    'title' => null,
-    'desc' => null ,
+    'title' => NULL,
+    'desc' => NULL,
     'callback' => 'ringo_eshop_horizontal_browsing_tabs_pane_checkout',
     'process' => FALSE,
     'weight' => -10,
-   );
-    
+  );
+
   $panes[] = array(
     'id' => 'id_document',
     'title' => t('ID Document'),
-     'desc' => t('Provide customers to add ID document information'),
-     'callback' => 'ringo_eshop_id_document_pane_checkout',
-     'process' => TRUE,
-     'weight' => 3,
-   );
+    'desc' => t('Provide customers to add ID document information'),
+    'callback' => 'ringo_eshop_id_document_pane_checkout',
+    'process' => TRUE,
+    'weight' => 3,
+  );
   $panes[] = array(
     'id' => 'ringo_contact_info',
     'title' => t('Contact info'),
-     'desc' => t('Provide customers to add contact information'),
-     'callback' => 'ringo_eshop_contact_info_pane_checkout',
-     'process' => TRUE,
-     'weight' => 2,
-   );
+    'desc' => t('Provide customers to add contact information'),
+    'callback' => 'ringo_eshop_contact_info_pane_checkout',
+    'process' => TRUE,
+    'weight' => 2,
+  );
 
-   return $panes;
+  return $panes;
 }
 
 /**
- * Implements of hook_uc_add_to_cart().
+ * Implements hook_uc_add_to_cart().
  */
 function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
@@ -165,30 +166,33 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
     global $user;
     $user_profile = user_load($user->uid);
     $restrict_qty = variable_get('ringo_eshop_sim_restrict_qty', 4);
-    // load current mobiles 
+
+    // Load current mobiles.
     if (FALSE && isset($user_profile->field_tax_code[LANGUAGE_NONE][0]['value'])) {
-        $all_mobiles = ringo_api_get_all_mobile_numbers($user_profile->field_tax_code[LANGUAGE_NONE][0]['value']);
-        if (count($all_mobiles)) {
-            $restrict_qty -= count($all_mobiles);
-        }
+      $all_mobiles = ringo_api_get_all_mobile_numbers($user_profile->field_tax_code[LANGUAGE_NONE][0]['value']);
+      if (count($all_mobiles)) {
+        $restrict_qty -= count($all_mobiles);
+      }
     }
-    // get SIM count in shipping cart
+
+    // Get SIM count in shipping cart.
     $sim_count = 0;
     foreach (uc_cart_get_contents() as $item) {
-        if ($item->nid == $sim_id) {
-            $sim_count++;
-        }
+      if ($item->nid == $sim_id) {
+        $sim_count++;
+      }
     }
     if ($sim_count >= $restrict_qty) {
-         $message = format_plural($restrict_qty, 'Sorry, you may only have 1 item in your cart. You must checkout or remove the item in your cart before adding a different item.',
+      $message = format_plural($restrict_qty, 'Sorry, you may only have 1 item in your cart. You must checkout or remove the item in your cart before adding a different item.',
         'Sorry, you may only have a total of @count items in your cart.  You must checkout or remove items from your cart before adding others.');
-        $result[] = array(
-            'success' => FALSE,
-            'message' => $message,
-        );
+      $result[] = array(
+        'success' => FALSE,
+        'message' => $message,
+      );
       return $result;
     }
-    // log number in custom table to track this number
+
+    // Log number in custom table to track this number.
     $oid = $data['attributes'][2];
     db_insert('ringo_eshop_numbers')
       ->fields(array(
@@ -201,19 +205,19 @@ function ringo_eshop_uc_add_to_cart($nid, $qty, $data) {
 }
 
 /**
- * Implements of hook_uc_cart_item_update().
+ * Implements hook_uc_cart_item_update().
  */
 function ringo_eshop_uc_cart_item_update($item) {
-    $sim_id = variable_get('ringo_eshop_sim_id', 30);
-    if ($item->nid == $sim_id && $item->qty > 1) {
-      db_update('uc_cart_products')
-              ->fields(array('qty' => 1, 'changed' => time()))
-              ->condition('cart_id', uc_cart_get_id())
-              ->condition('nid', $item->nid)
-              ->condition('data', serialize($item->data))
-              ->execute();
-      drupal_set_message(t('You may only add 1 !item to your cart. Quantity has been restricted.', array('!item' => $item->title)), 'warning');
-    }
+  $sim_id = variable_get('ringo_eshop_sim_id', 30);
+  if ($item->nid == $sim_id && $item->qty > 1) {
+    db_update('uc_cart_products')
+      ->fields(array('qty' => 1, 'changed' => time()))
+      ->condition('cart_id', uc_cart_get_id())
+      ->condition('nid', $item->nid)
+      ->condition('data', serialize($item->data))
+      ->execute();
+    drupal_set_message(t('You may only add 1 !item to your cart. Quantity has been restricted.', array('!item' => $item->title)), 'warning');
+  }
 }
 
 /**
@@ -222,113 +226,120 @@ function ringo_eshop_uc_cart_item_update($item) {
 function ringo_eshop_uc_order($op, &$order, $arg2) {
   switch ($op) {
     case 'save':
-        // ID Document section
-        $document_id = variable_get('eshop_document_id', 80);
-        $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
-        if ($data) {
-            $fields = array(
-            'field_type' => array('value' => $data['data'][1]['value'][0]),
-            'field_id_number' => array('value' => $data['data'][2]['value'][0]),
-            'field_expiry_date' => array('value' => strtotime($data['data'][3]['value'][0])),
-            );
-            _eshop_update_user_with_order_data($fields, $order->uid);
-        }
-        // Contact info section
-        $document_id = variable_get('eshop_contact_info_id', 81);
-        $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
-        if ($data) {
-            $fields = array(
-            'field_customer_title' => array('value' => $data['data'][1]['value'][0]), 
-            'field_first_name' => array('value' => $data['data'][2]['value'][0]),
-            'field_last_name' => array('value' => $data['data'][3]['value'][0]),
-            'field_tax_code' => array('value' => $data['data'][4]['value'][0]),
-            'field_gender' => array('value' => $data['data'][6]['value'][0]),
-            'field_province_of_birth' => array('value' => $data['data'][8]['value'][0]),
-            'field_city_of_birth' => array('value' => $data['data'][9]['value'][0]),
-            'field_country_of_birth' => array('key' => 'iso2', 'value' => $data['data'][7]['value'][0]),
-            'field_date_of_birth' => array('value' => strtotime($data['data'][5]['value'][0])),
-            );
-            _eshop_update_user_with_order_data($fields, $order->uid);
+      // ID Document section.
+      $document_id = variable_get('eshop_document_id', 80);
+      $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
+      if ($data) {
+        $fields = array(
+          'field_type' => array('value' => $data['data'][1]['value'][0]),
+          'field_id_number' => array('value' => $data['data'][2]['value'][0]),
+          'field_expiry_date' => array('value' => strtotime($data['data'][3]['value'][0])),
+        );
+        _eshop_update_user_with_order_data($fields, $order->uid);
+      }
+
+      // Contact info section.
+      $document_id = variable_get('eshop_contact_info_id', 81);
+      $data = get_object_vars(_uc_webform_pane_get_data($document_id, $order->order_id));
+      if ($data) {
+        $fields = array(
+          'field_customer_title' => array('value' => $data['data'][1]['value'][0]),
+          'field_first_name' => array('value' => $data['data'][2]['value'][0]),
+          'field_last_name' => array('value' => $data['data'][3]['value'][0]),
+          'field_tax_code' => array('value' => $data['data'][4]['value'][0]),
+          'field_gender' => array('value' => $data['data'][6]['value'][0]),
+          'field_province_of_birth' => array('value' => $data['data'][8]['value'][0]),
+          'field_city_of_birth' => array('value' => $data['data'][9]['value'][0]),
+          'field_country_of_birth' => array(
+            'key' => 'iso2',
+            'value' => $data['data'][7]['value'][0],
+          ),
+          'field_date_of_birth' => array('value' => strtotime($data['data'][5]['value'][0])),
+        );
+        _eshop_update_user_with_order_data($fields, $order->uid);
+      }
+      break;
+
+    /*
+    case 'update':
+        // Lock sim number.
+        if ($arg2 == 'pending') {
+            global $user;
+            $sim_id = variable_get('ringo_eshop_sim_id', 30);
+            foreach($order->products as $product) {
+                if ($product->nid == $sim_id) {
+                    // log number in custom table to track this number
+                    $number = $product->data['attributes']['Number'];
+                    reset($number);
+                    echo 'I am here';exit;
+                    db_insert('ringo_eshop_numbers')
+                        ->fields(array(
+                            'oid' => key($number),
+                            'uid' => $user->uid,
+                            'status' => 1,
+                        ))
+                        ->execute();
+                }
+            }
         }
         break;
-      /*
-      case 'update':
-          // Lock sim number.
-          if ($arg2 == 'pending') {
-              global $user;
-              $sim_id = variable_get('ringo_eshop_sim_id', 30);
-              foreach($order->products as $product) {
-                  if ($product->nid == $sim_id) {
-                      // log number in custom table to track this number
-                      $number = $product->data['attributes']['Number'];
-                      reset($number);
-                      echo 'I am here';exit;
-                      db_insert('ringo_eshop_numbers')
-                          ->fields(array(
-                              'oid' => key($number),
-                              'uid' => $user->uid,
-                              'status' => 1,
-                          ))
-                          ->execute();
-                  }
-              }
-          }
-          break;
-      */
+    */
   }
 }
 
 function _eshop_update_user_with_order_data($fields, $uid) {
-    $account = user_load($uid);
-    foreach ($fields as $k => $v) {
-        if(empty($v['value']))
-            return;
-        $target_key = isset($v['key']) ? $v['key'] : 'value';
-        $account->{$k}[LANGUAGE_NONE][0][$target_key] = $v['value'];
+  $account = user_load($uid);
+  foreach ($fields as $k => $v) {
+    if (empty($v['value'])) {
+      return;
     }
-    user_save($account);
+    $target_key = isset($v['key']) ? $v['key'] : 'value';
+    $account->{$k}[LANGUAGE_NONE][0][$target_key] = $v['value'];
+  }
+  user_save($account);
 }
+
 /**
- * Implements of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
   if ($form_id == 'uc_cart_checkout_form') {
-      
-      //$form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
-      $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
-      $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
-      $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
-      $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
-      //$form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
-      $form['panes']['delivery']['#title'] = t('Shipping Address');
-      $form['#validate'][] = '_ringo_eshop_validate_delivery';
-      $form['panes']['payment']['term_condition'] = array(
-          '#prefix' => '<div class="form-inline conditions-and-submit">',
-          '#type' => 'checkbox',
-          '#title' => t(
-          'Accept !terms_and_conditions and !privacy_policy',
-          array(
-            '!privacy_policy' => l(
+
+    //$form['#attached']['js'][] = drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
+    $form['panes']['cart']['#prefix'] = _eshop_horizontal_browsing_tabs('');
+    $form['panes']['delivery']['#prefix'] = _eshop_horizontal_browsing_tabs('delivery-pane');
+    $form['panes']['webform_nid81']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid81-pane');
+    $form['panes']['webform_nid80']['#prefix'] = _eshop_horizontal_browsing_tabs('webform_nid80-pane');
+    //$form['panes']['payment']['#prefix'] = _eshop_horizontal_browsing_tabs('payment-pane');
+    $form['panes']['delivery']['#title'] = t('Shipping Address');
+    $form['#validate'][] = '_ringo_eshop_validate_delivery';
+    $form['panes']['payment']['term_condition'] = array(
+      '#prefix' => '<div class="form-inline conditions-and-submit">',
+      '#type' => 'checkbox',
+      '#title' => t(
+        'Accept !terms_and_conditions and !privacy_policy',
+        array(
+          '!privacy_policy' => l(
             t('Privacy Policy'),
             variable_get('ringo_privacy_link', '<front>'),
             array('attributes' => array('target' => '_blank'))
-            ),
-            '!terms_and_conditions' => l(
+          ),
+          '!terms_and_conditions' => l(
             t('Terms and Conditions'),
             variable_get('ringo_terms_and_conditions', '<front>'),
             array('attributes' => array('target' => '_blank'))
-            ),
-        )   
-      ),  
-    '#required' => TRUE,
-  ); 
-      
+          ),
+        )
+      ),
+      '#required' => TRUE,
+    );
+
   }
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
-  if ($form_id == 'uc_product_add_to_cart_form_'.$sim_id) {
+  if ($form_id == 'uc_product_add_to_cart_form_' . $sim_id) {
     $form['attributes'][5]['#type'] = 'textarea';
     $query = db_select('ringo_eshop_numbers', 'rn');
     $query->addField('rn', 'oid');
@@ -337,20 +348,21 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     $eshop_number_chosen_ajax = 0;
     $eshop_limit_numers = variable_get('eshop_limit_numers', 20);
     if (count($form['attributes'][2]['#options']) > $eshop_limit_numers) {
-        $eshop_number_chosen_ajax = 1;
-        $form['attributes'][2]['#options'] =  array_slice($form['attributes'][2]['#options'], 0, $eshop_limit_numers+1, TRUE);
+      $eshop_number_chosen_ajax = 1;
+      $form['attributes'][2]['#options'] = array_slice($form['attributes'][2]['#options'], 0, $eshop_limit_numers + 1, TRUE);
     }
     $setting = array('ringo_eshop' => array('eshop_number_chosen_ajax' => $eshop_number_chosen_ajax));
     drupal_add_js($setting, 'setting');
-    // localize card options
+
+    // Localize card options.
     $card_types = array();
     foreach ($form['attributes'][1]['#options'] as $k => $v) {
-        $card_types[$k] = t($v);
+      $card_types[$k] = t($v);
     }
     $form['attributes'][1]['#options'] = $card_types;
     $card_keys = array_keys($card_types);
     $form['attributes'][1]['#default_value'] = $card_keys[0];
-    // add national offers
+    // Add national offers.
     $summary_text = t('National Offers: You designed an offer of !blue_start !voice minutes, !sms SMS &amp; !data GB !blue_end for
   an estimated monthly bill of "!price € / month"',
       array(
@@ -367,13 +379,13 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
     //$form['attributes'][5]['#suffix'] = format_string('<p class="internat-bundle-desc"></p>') .'</div>';
     $form['tabs'] = array(
       '#prefix' => '<div id="tabs">',
-      '#markup' => '<ul><li><a href="#tabs-1">'. t('National Offers') .'</a></li><li><a href="#tabs-2">'. t('International Offers') .'</a></li></ul>',
+      '#markup' => '<ul><li><a href="#tabs-1">' . t('National Offers') . '</a></li><li><a href="#tabs-2">' . t('International Offers') . '</a></li></ul>',
       '#weight' => 0,
     );
     $form += _ringo_eshop_build_national_offers();
     $form += _ringo_eshop_build_international_offers();
-    $nat_desc = '<div id="national-bundle-details">' . format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) .'</div>';
-    $internat_desc = '<div id="international-bundle-details">' . format_string('<p class="internat-bundle-desc">!summary</p>', array('!summary' => t('International offers: '))) .'</div>';
+    $nat_desc = '<div id="national-bundle-details">' . format_string('<p class="nat-bundle-desc">!summary</p>', array('!summary' => $summary_text)) . '</div>';
+    $internat_desc = '<div id="international-bundle-details">' . format_string('<p class="internat-bundle-desc">!summary</p>', array('!summary' => t('International offers: '))) . '</div>';
     $form['tabs_close'] = array(
       '#markup' => '</div>',
       '#suffix' => $nat_desc . $internat_desc,
@@ -392,113 +404,131 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_form_FORM_ID_alter().
  */
 function ringo_eshop_form_webform_client_form_80_alter(&$form, &$form_state, $form_id) {
-    $fields = array(
-        'field_type' => 'type',
-        'field_id_number' => 'number',
-        'field_expiry_date' => array('name' => 'expiry_date', 'type' => 'date'),
-        );
-    _eshop_checkout_set_default_values($form, $fields);
+  $fields = array(
+    'field_type' => 'type',
+    'field_id_number' => 'number',
+    'field_expiry_date' => array('name' => 'expiry_date', 'type' => 'date'),
+  );
+  _eshop_checkout_set_default_values($form, $fields);
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function ringo_eshop_form_webform_client_form_81_alter(&$form, &$form_state, $form_id) {
-    $fields = array(
-        'field_customer_title' => 'title', 'field_first_name' => 'first_name', 
-        'field_last_name' => 'last_name', 'field_tax_code' => 'tax_code', 
-        'field_gender' => 'gender', 'field_province_of_birth' => 'province_of_birth', 
-        'field_city_of_birth' => 'city_of_birth',
-        'field_country_of_birth' => array('name' => 'country_of_birth', 'type' => 'country'),
-        'field_date_of_birth' => array('name' => 'date_of_birth', 'type' => 'date'),
-        );
-    _eshop_checkout_set_default_values($form, $fields);
+  $fields = array(
+    'field_customer_title' => 'title',
+    'field_first_name' => 'first_name',
+    'field_last_name' => 'last_name',
+    'field_tax_code' => 'tax_code',
+    'field_gender' => 'gender',
+    'field_province_of_birth' => 'province_of_birth',
+    'field_city_of_birth' => 'city_of_birth',
+    'field_country_of_birth' => array(
+      'name' => 'country_of_birth',
+      'type' => 'country',
+    ),
+    'field_date_of_birth' => array('name' => 'date_of_birth', 'type' => 'date'),
+  );
+  _eshop_checkout_set_default_values($form, $fields);
 }
+
 /**
- * 
+ *
  */
 function _eshop_checkout_set_default_values(&$form, $fields) {
-    global $user;
-    $user_profile = user_load($user->uid);
-    foreach ($fields as $key => $field) {
-        if (!is_array($field)) {
-            $field = array('name' => $field, 'type' => 'default');
-        }
-        if (empty($form['submitted'][$field['name']]['#default_value'])) {
-            $target_key = 'value';
-            if ($field['type'] == 'country') {
-                $target_key = 'iso2';
-            }
-            if (isset($user_profile->{$key}[LANGUAGE_NONE][0][$target_key])) {
-                if ($field['type'] == 'date') {
-                    $default_date = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
-                    $default_value = array(
-                        'month' => intval(date('m', $default_date)), 
-                        'day' => intval(date('d', $default_date)), 
-                        'year' => intval(date('Y', $default_date)), 
-                    );
-                }
-                else {
-                    $default_value = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
-                }
-                $form['submitted'][$field['name']]['#default_value'] = $default_value;
-            }
-        }
+  global $user;
+  $user_profile = user_load($user->uid);
+  foreach ($fields as $key => $field) {
+    if (!is_array($field)) {
+      $field = array('name' => $field, 'type' => 'default');
     }
+    if (empty($form['submitted'][$field['name']]['#default_value'])) {
+      $target_key = 'value';
+      if ($field['type'] == 'country') {
+        $target_key = 'iso2';
+      }
+      if (isset($user_profile->{$key}[LANGUAGE_NONE][0][$target_key])) {
+        if ($field['type'] == 'date') {
+          $default_date = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
+          $default_value = array(
+            'month' => intval(date('m', $default_date)),
+            'day' => intval(date('d', $default_date)),
+            'year' => intval(date('Y', $default_date)),
+          );
+        }
+        else {
+          $default_value = $user_profile->{$key}[LANGUAGE_NONE][0][$target_key];
+        }
+        $form['submitted'][$field['name']]['#default_value'] = $default_value;
+      }
+    }
+  }
 }
 
 function _ringo_eshop_validate_delivery($form, &$form_state) {
   global $user;
-  // validate delivery mobile number
+  // Validate delivery mobile number.
   if (isset($form_state['values']['panes']['delivery']['address']['delivery_phone'])) {
     $phone = $form_state['values']['panes']['delivery']['address']['delivery_phone'];
-    if(!is_numeric($phone)) {
-      form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping telephone number.')) ;
+    if (!is_numeric($phone)) {
+      form_set_error('panes][delivery][address][delivery_phone', t('You should add a valid shipping telephone number.'));
     }
   }
-  // validate billing mobile number
+  // Validate billing mobile number.
   $phone = $form_state['values']['panes']['billing']['address']['billing_phone'];
   if (isset($form_state['values']['panes']['billing']['copy_address']) && !$form_state['values']['panes']['billing']['copy_address'] && !is_numeric($phone)) {
-    form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing telephone number.')) ;
+    form_set_error('panes][billing][address][delivery_phone', t('You should add a valid billing telephone number.'));
   }
-  // validate id number
+  // Validate id number.
   if (isset($form_state['values']['panes']['webform_nid80'][0]['number'])) {
     $result = db_query('
       SELECT COUNT(ws.sid) 
       FROM {webform_submissions} ws 
       INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
       WHERE ws.nid = :nid AND uid != :uid AND data = :data
-      ', array(':nid' => 80, ':cid' => 2, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid80'][0]['number'])
+      ', array(
+        ':nid' => 80,
+        ':cid' => 2,
+        ':uid' => $user->uid,
+        ':data' => $form_state['values']['panes']['webform_nid80'][0]['number'],
+      )
     )->fetchField();
     if ($result) {
-      form_set_error('panes][webform_nid80][0][number', t('Same ID number exists for another user.')) ;
+      form_set_error('panes][webform_nid80][0][number', t('Same ID number exists for another user.'));
     }
   }
-  // validate tax code
+
+  // Validate tax code.
   if (isset($form_state['values']['panes']['webform_nid81'][0]['tax_code'])) {
     $result = db_query('
       SELECT COUNT(ws.sid) 
       FROM {webform_submissions} ws 
       INNER JOIN {webform_submitted_data} wsd ON ws.sid = wsd.sid AND cid = :cid 
       WHERE ws.nid = :nid AND uid != :uid AND data = :data
-      ', array(':nid' => 81, ':cid' => 4, ':uid' => $user->uid, ':data' => $form_state['values']['panes']['webform_nid81'][0]['tax_code'])
+      ', array(
+        ':nid' => 81,
+        ':cid' => 4,
+        ':uid' => $user->uid,
+        ':data' => $form_state['values']['panes']['webform_nid81'][0]['tax_code'],
+      )
     )->fetchField();
     if ($result) {
-      form_set_error('panes][webform_nid81][0][tax_code', t('Same tax code exists for another user.')) ;
+      form_set_error('panes][webform_nid81][0][tax_code', t('Same tax code exists for another user.'));
     }
   }
 
 }
 
 function _ringo_eshop_validate_address_phone($form, &$form_state) {
-  // validate delivery mobile number
+  // Validate delivery mobile number.
   if (!empty($form_state['uc_addresses_address']['phone']) && !is_numeric($form_state['uc_addresses_address']['phone'])) {
-      form_set_error('address][phone', t('You should add a valid telephone number.')) ;
+    form_set_error('address][phone', t('You should add a valid telephone number.'));
   }
 }
 
 /**
- *Implements of hook_uc_cart_alter().
+ * Implements hook_uc_cart_alter().
  */
 function ringo_eshop_uc_cart_alter(&$items) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
@@ -524,7 +554,7 @@ function ringo_eshop_uc_cart_alter(&$items) {
 function ringo_eshop_uc_cart_item_delete($entity) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($entity->nid == $sim_id && $entity->qty == 0) {
-    $oid =  $entity->data['attributes'][2];
+    $oid = $entity->data['attributes'][2];
     db_delete('ringo_eshop_numbers')
       ->condition('oid', $oid)
       ->execute();
@@ -607,67 +637,88 @@ function _ringo_eshop_assign_international_bundle_form($international_promotions
     );
   }
   $form['select-int-bundle']['skip'] = array(
-    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'national\');">'. t('Go to national bundle') .'</div>',
+    '#markup' => '<div class="skip-bundle" onclick="toggle_bundle(\'national\');">' . t('Go to national bundle') . '</div>',
   );
   return $form;
 }
 
 
 /**
- * Implements of hook_init().
+ * Implements hook_init().
  */
 function ringo_eshop_init() {
-  drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js');
-  // Redirect to SIM cart product page
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/eshop_checkout.js');
+  // Redirect to SIM cart product page.
   if ($_GET['q'] == 'taxonomy/term/44') {
     $sim_id = variable_get('ringo_eshop_sim_id', 30);
-    drupal_goto('node/'. $sim_id);
+    drupal_goto('node/' . $sim_id);
   }
 }
 
 function _eshop_horizontal_browsing_tabs($pane) {
-        $rows = array() ; 
-        $headers = array() ; 
-        $attributes = array('class' => 'eshop-checkout-sroll-table') ;  
-         
-        //drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js') ;
-        
-        $row_text = t('Your Information') ;
-        $scoll_to_id = "webform_nid81-pane" ;
-        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
-        $rows[0][0] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
-         
-        $row_text = t('ID Document');
-        $scoll_to_id = "webform_nid80-pane" ;    
-        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
-        $rows[0][1] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
+  $rows = array();
+  $headers = array();
+  $attributes = array('class' => 'eshop-checkout-sroll-table');
 
-        $row_text = t('Shipping Address') ;
-        $scoll_to_id = "delivery-pane" ;  
-        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
-        $rows[0][2] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
-         
-        $row_text = t('Payment') ;
-        $scoll_to_id = "payment-pane" ;    
-        $selected  = ($scoll_to_id == $pane) ? 'pane-selected' : '';
-        $rows[0][3] = array('data' => $row_text, 'class' => 'checkout-scroll-tab '. $selected, 'data-target' => $scoll_to_id) ; 
-         
-         
-        $table = array('header' => $headers, 'rows' => $rows, 'attributes' => $attributes, 'sticky' => FALSE); 
-       
-        return theme('table', $table);
+  // drupal_add_js(drupal_get_path('module', 'ringo_eshop'). '/js/eshop_checkout.js') ;
+
+  $row_text = t('Your Information');
+  $scoll_to_id = "webform_nid81-pane";
+  $selected = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+  $rows[0][0] = array(
+    'data' => $row_text,
+    'class' => 'checkout-scroll-tab ' . $selected,
+    'data-target' => $scoll_to_id,
+  );
+
+  $row_text = t('ID Document');
+  $scoll_to_id = "webform_nid80-pane";
+  $selected = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+  $rows[0][1] = array(
+    'data' => $row_text,
+    'class' => 'checkout-scroll-tab ' . $selected,
+    'data-target' => $scoll_to_id,
+  );
+
+  $row_text = t('Shipping Address');
+  $scoll_to_id = "delivery-pane";
+  $selected = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+  $rows[0][2] = array(
+    'data' => $row_text,
+    'class' => 'checkout-scroll-tab ' . $selected,
+    'data-target' => $scoll_to_id,
+  );
+
+  $row_text = t('Payment');
+  $scoll_to_id = "payment-pane";
+  $selected = ($scoll_to_id == $pane) ? 'pane-selected' : '';
+  $rows[0][3] = array(
+    'data' => $row_text,
+    'class' => 'checkout-scroll-tab ' . $selected,
+    'data-target' => $scoll_to_id,
+  );
+
+
+  $table = array(
+    'header' => $headers,
+    'rows' => $rows,
+    'attributes' => $attributes,
+    'sticky' => FALSE,
+  );
+
+  return theme('table', $table);
 }
 
 /**
- * Implements of hook_url_outbound_alter().
+ * Implements hook_url_outbound_alter().
  */
 function ___ringo_eshop_url_outbound_alter(&$path, &$options, $original_path) {
-    if (user_is_anonymous()) {
-        if ($path == 'user' || $path == 'user/login') {
-            $path = 'eshop/login';
-        }
-        elseif ($path == 'user/password') {
-            $path = 'eshop/password';
-        }
+  if (user_is_anonymous()) {
+    if ($path == 'user' || $path == 'user/login') {
+      $path = 'eshop/login';
     }
+    elseif ($path == 'user/password') {
+      $path = 'eshop/password';
+    }
+  }
 }
