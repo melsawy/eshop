@@ -1,0 +1,8 @@
+name = Ringo Ubercart Addresses
+description = "Allow editing of zones and cities and convert cities to drop down"
+dependencies[] = uc_addresses
+core = 7.x
+
+; UC Field handlers
+files[] = uc_handlers/RingoUcAddressesUcCityFieldHandler.class.php
+files[] = uc_handlers/RingoUcAddressesUcZoneFieldHandler.class.php

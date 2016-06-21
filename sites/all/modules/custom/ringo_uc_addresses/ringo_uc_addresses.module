@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ * Contains logic to alter ubcart addresses.
+ */
+
+/**
+ * Implements hook_uc_addresses_fields_alter().
+ */
+function ringo_uc_addresses_uc_addresses_fields_alter(&$fields) {
+  $fields['zone']['handler'] = 'RingoUcAddressesUcZoneFieldHandler';
+  $fields['city']['handler'] = 'RingoUcAddressesUcCityFieldHandler';
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function ringo_uc_addresses_ctools_plugin_api($owner, $api) {
+  if ($owner == 'uc_addresses' && $api == 'uc_addresses_fields') {
+    return array(
+      'version' => 2,
+    );
+  }
+}
+
+/**
+ * Ajax callback: updates the city select box when the zone is changed.
+ */
+function ringo_uc_addresses_update_address_field_city($form, &$form_state) {
+  $element = &$form;
+  foreach (array_slice($form_state['triggering_element']['#array_parents'], 0, -1) as $field) {
+    $element = &$element[$field];
+  }
+  $prefix = empty($element['#key_prefix']) ? '' : ($element['#key_prefix'] . '_');
+  return $element[$prefix . 'city'];
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ringo_uc_addresses_menu() {
+  $items['admin/store/settings/countries/zones'] = array(
+    'title' => 'Cities & Zones',
+    'description' => 'Mass update cities and zones.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ringo_uc_addresses_cities_zones_form'),
+    'access arguments' => array('administer store'),
+    'file' => 'ringo_uc_store.cities_zones.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  return $items;
+}

@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Install file for Ringo Ubercart Addresses.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function ringo_uc_addresses_schema() {
+  $schema['uc_cities'] = array(
+    'description' => 'Stores city information within a zone.',
+    'fields' => array(
+      'city_id' => array(
+        'description' => 'Primary key: the unique city id.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'city_zone_id' => array(
+        'description' => 'The {uc_zones}.zone_id to which this city belongs.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'city_name' => array(
+        'description' => 'The city name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'city_zone_id' => array('city_zone_id'),
+    ),
+    'primary key' => array('city_id'),
+    'foreign keys' => array(
+      'uc_zones' => array(
+        'table' => 'uc_zones',
+        'columns' => array('city_zone_id' => 'city_zone_id'),
+      ),
+    ),
+  );
+  return $schema;
+}
