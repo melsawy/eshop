@@ -62,6 +62,16 @@ function ringo_eshop_menu() {
     'page arguments' => array('ringo'),
     'access callback' => TRUE,
   );
+  $items['admin/store/settings/checkout/contract'] = array(
+    'title' => 'Ringo Contract',
+    'description' => 'Manage ringo contract.',
+    'page arguments' => array('ringo_eshop_ringo_contract_form'),
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('administer store'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    'file' => 'includes/ringo_eshop.admin.inc',
+  );
   return $items;
 }
 
@@ -430,6 +440,7 @@ function ringo_eshop_form_webform_client_form_81_alter(&$form, &$form_state, $fo
     ),
     'field_date_of_birth' => array('name' => 'date_of_birth', 'type' => 'date'),
   );
+
   _eshop_checkout_set_default_values($form, $fields);
 }
 
@@ -719,6 +730,21 @@ function ___ringo_eshop_url_outbound_alter(&$path, &$options, $original_path) {
     }
     elseif ($path == 'user/password') {
       $path = 'eshop/password';
+    }
+  }
+}
+
+/**
+ * Download contract link.
+ *
+ * Used in your information product pane.
+ */
+function _ringo_eshop_contract_link() {
+  $fid = variable_get('ringo_eshop_contract', NULL);
+  if (is_numeric($fid)) {
+    $file = file_load($fid);
+    if ($file) {
+      print '<h1><br>' . t('Click !here to download contract', array('!here' => l(t('here'), file_create_url($file->uri)))) . '</h1>';
     }
   }
 }

@@ -37,3 +37,22 @@ function _ringo_eshop_settings($form, $form_state) {
 
   return system_settings_form($form);
 }
+
+/**
+ * Callback for: admin/store/settings/checkout/contract.
+ *
+ * Allows admin to upload ringo shop contracts.
+ */
+function ringo_eshop_ringo_contract_form($form, $form_state) {
+  $form['ringo_eshop_contract'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Ring sim contract'),
+    '#default_value' => variable_get('ringo_eshop_contract', ''),
+    '#upload_validators' => array(
+      'file_validate_extensions' => array(' jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp doc docx'),
+    ),
+    '#upload_location' => 'public://contract/',
+  );
+
+  return system_settings_form($form);
+}
