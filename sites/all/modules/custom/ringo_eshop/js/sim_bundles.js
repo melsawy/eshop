@@ -7,6 +7,8 @@
 
         // Set up old data.
         data['national'].forEach(function (bundle_id) {
+          if (bundle_id == -1) return;
+          
           jQuery('table.nat-bundle td[package-id="' + bundle_id + '"]').addClass("selected-cell");
         });
         _update_national_summary();
