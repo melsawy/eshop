@@ -141,6 +141,7 @@ function _update_international_summary() {
 
   // Delete all current country data.
   jQuery('.internat-bundle-desc span[data-id='+ country_id +']').remove();
+  var html = jQuery('.internat-bundle-desc').html();
 
   jQuery('table.int-bundle .form-type-checkbox input[type=checkbox]').each(function() {
     var idd = jQuery(this).attr('id');
@@ -153,12 +154,11 @@ function _update_international_summary() {
       // New element HTML.
       var element = '<span data-id="'+ country_id +'">'+ country_name +'('+ size +') - "'+ price +'" + "' + activationFee + '"</span>';
 
-      var html = jQuery('.internat-bundle-desc').html();
       html += "\n" + element;
-      html = html.replace(/(\r\n|\r|\n){2}/g, '$1').replace(/(\r\n|\r|\n){3,}/g, '$1\n');
-
-      jQuery('.internat-bundle-desc').html(html);
     }
+
+    html = html.replace(/(\r\n|\r|\n){2}/g, '$1').replace(/(\r\n|\r|\n){3,}/g, '$1\n');
+    jQuery('.internat-bundle-desc').html(html);
 
     jQuery('#edit-attributes-5').val(jQuery('.internat-bundle-desc').html());
   });
