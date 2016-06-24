@@ -311,12 +311,6 @@ function assign_international_bundle_form($form_state, $international_promotions
       '#markup' => '<div id="select-int-wrapper" ></div>',
     );
   }
-  $form['select-int-bundle']['add_package'] = array(
-    '#type' => 'button',
-    '#value' => t('Add package'),
-    '#attributes' => array('onclick' => '_assign_international_bundle();return false;'),
-    '#suffix' => '</div>',
-  );
 
   return $form;
 }

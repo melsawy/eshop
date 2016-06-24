@@ -351,6 +351,9 @@ function ringo_eshop_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/jquery-ui.js', array('group' => JS_THEME));
   drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/jquery-ui.css');
   drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/national_bundles.js', array('group' => JS_THEME));
+  drupal_add_js(drupal_get_path('module', 'ringo_eshop') . '/js/sim_bundles.js', array('group' => JS_THEME));
+
+  drupal_add_css(drupal_get_path('module', 'ringo_eshop') . '/css/sim_bundles.css', array('group' => JS_THEME));
 
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   if ($form_id == 'uc_product_add_to_cart_form_' . $sim_id) {
@@ -556,7 +559,7 @@ function ringo_eshop_uc_cart_alter(&$items) {
   $sim_id = variable_get('ringo_eshop_sim_id', 30);
   foreach ($items as $id => $item) {
     if ($item->nid == $sim_id) {
-      $pattern = '/"([0-9].*?)€/';
+      $pattern = '/"([0-9]+\s)€/';
       if (!empty($item->data['attributes'][4])) {
         preg_match($pattern, $item->data['attributes'][4], $matches);
         if (isset($matches[1])) {
@@ -771,5 +774,18 @@ function ringo_eshop_module_implements_alter(&$implementations, $hook) {
     $group = $implementations['ringo_eshop'];
     unset($implementations['ringo_eshop']);
     $implementations['ringo_eshop'] = $group;
+  }
+}
+
+/**
+ * Implements hook_uc_cart_pane().
+ *
+ * Hide the json array that holds the bundle data (attribute 6).
+ */
+function ringo_eshop_uc_cart_pane($items) {
+  foreach ($items as &$item) {
+    if (isset($item->data['attributes'][6])) {
+      unset($item->data['attributes'][6]);
+    }
   }
 }
