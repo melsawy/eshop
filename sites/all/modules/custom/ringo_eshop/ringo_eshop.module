@@ -776,16 +776,3 @@ function ringo_eshop_module_implements_alter(&$implementations, $hook) {
     $implementations['ringo_eshop'] = $group;
   }
 }
-
-/**
- * Implements hook_uc_cart_pane().
- *
- * Hide the json array that holds the bundle data (attribute 6).
- */
-function ringo_eshop_uc_cart_pane($items) {
-  foreach ($items as &$item) {
-    if (isset($item->data['attributes'][6])) {
-      unset($item->data['attributes'][6]);
-    }
-  }
-}

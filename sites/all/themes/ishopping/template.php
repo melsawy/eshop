@@ -112,10 +112,14 @@ function ishopping_uc_product_attributes($variables) {
   $option_rows = array();
 
   foreach (element_children($attributes) as $key) {
+    // Attribute 6 is the json array that contains the sim bundles, and it
+    // never be rendered.
+    if ($key == 6) continue;
+
     $optionstr = '';
 
     foreach ((array)$attributes[$key]['#options'] as $option) {
-      // We only need to allow translation from the second option onward
+      // We only need to allow translation from the second option onward.
       if (empty($optionstr)) {
         $optionstr .= $option;
       }

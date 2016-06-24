@@ -8,7 +8,7 @@
         // Set up old data.
         data['national'].forEach(function (bundle_id) {
           if (bundle_id == -1) return;
-          
+
           jQuery('table.nat-bundle td[package-id="' + bundle_id + '"]').addClass("selected-cell");
         });
         _update_national_summary();
@@ -39,7 +39,8 @@
         var data = get_bundles();
 
         // Set up international summary
-        jQuery('.internat-bundle-desc').html(jQuery('#edit-attributes-5').val());
+        if (jQuery('#edit-attributes-5').val())
+          jQuery('.internat-bundle-desc').html(jQuery('#edit-attributes-5').val());
 
         // Set up old data.
         data['international'].forEach(function (bundle_id) {

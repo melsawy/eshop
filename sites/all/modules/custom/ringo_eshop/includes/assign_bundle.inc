@@ -312,6 +312,10 @@ function assign_international_bundle_form($form_state, $international_promotions
     );
   }
 
+  $form['select-int-bundle']['int-bundle-end'] = array(
+    '#markup' => '</div>',
+  );
+
   return $form;
 }
 
